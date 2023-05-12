@@ -1,11 +1,11 @@
-name: BTC Unit Tests for Simulink Models
+name: BTC Unit Tests for C-Code
 
 # run on push if there are changes in the paths listed below
 on:
   push:
     paths:
-      - .github/workflows/test_sl.yml
-      - examples/Simulink_PWC/**
+      - .github/workflows/test_ccode.yml
+      - examples/CCode_SPA/**
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -17,13 +17,13 @@ jobs:
     steps:
       - name: checkout repo content
         uses: actions/checkout@v3
-        
+      
       - name: Install Dependencies
         run: pip install -r requirements.txt
         shell: cmd
 
       - name: run test workflow
-        run:  python examples/Simulink_PWC/test_workflow_sl.py "${{ github.workspace}}/examples/Simulink_PWC/pwc_sl.epp"
+        run:  python examples/CCode_SPA/test_workflow_c.py "${{github.workspace}}/examples/CCode_SPA/spa_c.epp"
         
       - name: archive test results
         uses: actions/upload-artifact@v3
