@@ -8,19 +8,19 @@ def get_global_config():
     """Returns the global config from the parent dir of the
     file 'btc_config.py' with the project-specific config."""
     thisfile = os.path.abspath(__file__).replace('\\', '/')
-    global_config_file = os.path.dirname(thisfile) + '/btc_config.yaml'
+    global_config_file = os.path.dirname(thisfile) + '/btc_config.yml'
     config = __load_config(global_config_file)
     return config
 
 def get_project_specific_config(project_directory=os.getcwd()):
     """Returns the project-specific config, which is the first file
-    called 'btc_config.yaml' that is found when recursively searching
+    called 'btc_project_config.yml' that is found when recursively searching
     the specified project directory. If no project directory is specified,
     the current working directory is used."""
     project_specific_config = {}
     for root, _, files in os.walk(project_directory):
         for name in files:
-            if fnmatch.fnmatch(name, 'btc_config.yaml'):
+            if fnmatch.fnmatch(name, 'btc_project_config.yml'):
                 project_specific_config = __load_config(root + '/' + name)
                 break
     return project_specific_config
