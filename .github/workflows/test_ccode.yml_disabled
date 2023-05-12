@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - .github/workflows/test_ccode.yml
+      - examples/test_workflow_c.py
       - examples/CCode_SPA/**
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -23,7 +24,7 @@ jobs:
         shell: cmd
 
       - name: run test workflow
-        run:  python examples/CCode_SPA/test_workflow_c.py "${{github.workspace}}/examples/CCode_SPA/spa_c.epp"
+        run:  python examples/test_workflow_c.py "${{github.workspace}}/examples/CCode_SPA/spa_c.epp"
         
       - name: archive test results
         uses: actions/upload-artifact@v3

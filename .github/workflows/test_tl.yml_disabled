@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - .github/workflows/test_tl.yml
+      - examples/test_workflow_tl.py
       - examples/TargetLink_ACC/**
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -23,7 +24,7 @@ jobs:
         shell: cmd
         
       - name: run test workflow
-        run:  python examples/TargetLink_ACC/test_workflow_tl.py "${{github.workspace}}/examples/TargetLink_ACC/acc_tl.epp"
+        run:  python examples/test_workflow_tl.py "${{github.workspace}}/examples/TargetLink_ACC/acc_tl.epp"
 
       - name: archive test results
         uses: actions/upload-artifact@v3
