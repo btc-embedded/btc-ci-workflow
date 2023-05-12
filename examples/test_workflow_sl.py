@@ -1,3 +1,4 @@
+import os
 import sys
 
 from api.btc_config import get_merged_config
@@ -6,7 +7,7 @@ from api.btc_rest_api import EPRestApi as EP
 EP_VERSION = '23.1p0'
 EP_INSTALL_LOCATION = f"C:/Program Files/BTC/ep{EP_VERSION}"
 
-def run_btc_test(epp_file, work_dir):
+def run_btc_test(epp_file):
     # BTC EmbeddedPlatform API object
     config = get_merged_config()
     ep = EP(config=config)
@@ -43,6 +44,7 @@ def run_btc_test(epp_file, work_dir):
     response = ep.post_req(f"scopes/{toplevel_scope_uid}/project-report")
     response = response.json()
     report = response['result']
+    work_dir = os.path.dirname(epp_file)
     ep.post_req(f"reports/{report['uid']}", { 'exportPath': work_dir })
 
     # Save *.epp

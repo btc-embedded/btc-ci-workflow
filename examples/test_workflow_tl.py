@@ -1,10 +1,11 @@
+import os
 import sys
 
 from api.btc_config import get_merged_config, get_vector_gen_config
 from api.btc_rest_api import EPRestApi as EP
 
 
-def run_btc_test(epp_file, export_directory):
+def run_btc_test(epp_file):
     # BTC EmbeddedPlatform API object
     config = get_merged_config()
     ep = EP(config=config)
@@ -48,7 +49,8 @@ def run_btc_test(epp_file, export_directory):
     # Create project report
     response = ep.post_req(f"scopes/{toplevel_scope_uid}/project-report")
     report = response.json()['result']
-    ep.post_req(f"reports/{report['uid']}", { 'exportPath': export_directory })
+    work_dir = os.path.dirname(epp_file)
+    ep.post_req(f"reports/{report['uid']}", { 'exportPath': work_dir })
 
     # Save *.epp
     ep.put_req('profiles', { 'path': epp_file })

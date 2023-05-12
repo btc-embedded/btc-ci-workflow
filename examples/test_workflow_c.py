@@ -43,7 +43,7 @@ def run_btc_test(epp_file):
     response = ep.post_req(f"scopes/{toplevel_scope_uid}/project-report") # ?template-name=rbt
     response = response.json()
     report = response['result']
-    work_dir = os.dirname(epp_file)
+    work_dir = os.path.dirname(epp_file)
     ep.post_req(f"reports/{report['uid']}", { 'exportPath': work_dir })
 
     # Save *.epp
