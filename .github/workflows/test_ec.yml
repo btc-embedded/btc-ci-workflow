@@ -16,17 +16,17 @@ jobs:
     runs-on: self-hosted
     
     steps:
-      - name: checkout repo content
+      - name: Checkout repo content
         uses: actions/checkout@v3
       
       - name: Install Dependencies
         run: pip install -r requirements.txt
         shell: cmd
 
-      - name: run test workflow
+      - name: Run test workflow
         run:  python examples/test_workflow_ec.py "${{github.workspace}}/examples/EmbeddedCoderAutosar_SHC/shc_ec_ar.epp"
         
-      - name: archive test results
+      - name: Archive test results
         uses: actions/upload-artifact@v3
         with:
           name: BTC-Test-Report
