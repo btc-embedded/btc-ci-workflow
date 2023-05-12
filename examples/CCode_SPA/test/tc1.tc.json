@@ -1,0 +1,88 @@
+{
+  "version":"1.1",
+  "metaData":{
+    "name":"tc1",
+    "scopePath":"Unit.c:1:unit",
+    "architecture":"unit [C-Code]",
+    "description":"testing table array 1",
+    "length":"2"
+  },
+  "vectorContent":{
+    "steps":[ {
+      "step":{
+        "number":"0",
+        "inputs":[ {
+          "stDataGlb.n":"1"
+        }, {
+          "enSelArrGlb":"1"
+        } ],
+        "parameters":[ {
+          "stDataGlb.array1[0]":"1"
+        }, {
+          "stDataGlb.array1[1]":"20"
+        }, {
+          "stDataGlb.array1[2]":"300"
+        }, {
+          "stDataGlb.array1[3]":"0.0"
+        }, {
+          "stDataGlb.array1[4]":"0.0"
+        }, {
+          "stDataGlb.array1[5]":"0.0"
+        }, {
+          "stDataGlb.array1[6]":"0.0"
+        }, {
+          "stDataGlb.array1[7]":"0.0"
+        }, {
+          "stDataGlb.array1[8]":"0.0"
+        }, {
+          "stDataGlb.array1[9]":"0.0"
+        }, {
+          "stDataGlb.array2[0]":"0.0"
+        }, {
+          "stDataGlb.array2[1]":"0.0"
+        }, {
+          "stDataGlb.array2[2]":"0.0"
+        }, {
+          "stDataGlb.array2[3]":"0.0"
+        }, {
+          "stDataGlb.array2[4]":"0.0"
+        }, {
+          "stDataGlb.array2[5]":"0.0"
+        }, {
+          "stDataGlb.array2[6]":"0.0"
+        }, {
+          "stDataGlb.array2[7]":"0.0"
+        }, {
+          "stDataGlb.array2[8]":"0.0"
+        }, {
+          "stDataGlb.array2[9]":"0.0"
+        } ],
+        "outputs":[ {
+          "stResultsGlb.resAdd":"1"
+        }, {
+          "stResultsGlb.resMul":"1"
+        }, {
+          "stResultsGlb.resAv":"af(stResultsGlb.resAdd / stDataGlb.n, 2)"
+        } ]
+      }
+    }, {
+      "step":{
+        "number":"1",
+        "inputs":[ {
+          "stDataGlb.n":"3"
+        } ],
+        "outputs":[ {
+          "stResultsGlb.resAdd":"321"
+        }, {
+          "stResultsGlb.resMul":"6000"
+        } ]
+      }
+    } ]
+  },
+  "requirements":[ "Requirements sheet::Req_11" ],
+  "interface":{
+    "inputs":[ "stDataGlb.n", "enSelArrGlb" ],
+    "parameters":[ "stDataGlb.array1[0]", "stDataGlb.array1[1]", "stDataGlb.array1[2]", "stDataGlb.array1[3]", "stDataGlb.array1[4]", "stDataGlb.array1[5]", "stDataGlb.array1[6]", "stDataGlb.array1[7]", "stDataGlb.array1[8]", "stDataGlb.array1[9]", "stDataGlb.array2[0]", "stDataGlb.array2[1]", "stDataGlb.array2[2]", "stDataGlb.array2[3]", "stDataGlb.array2[4]", "stDataGlb.array2[5]", "stDataGlb.array2[6]", "stDataGlb.array2[7]", "stDataGlb.array2[8]", "stDataGlb.array2[9]" ],
+    "outputs":[ "stResultsGlb.resAdd", "stResultsGlb.resMul", "stResultsGlb.resAv" ]
+  }
+}

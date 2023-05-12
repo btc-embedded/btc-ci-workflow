@@ -1,0 +1,33 @@
+name: BTC Unit Tests for Simulink Models (EmbeddedCoder AUTOSAR)
+
+# run on push if there are changes in the paths listed below
+on:
+  push:
+    paths:
+      - .github/workflows/test_ec.yml
+      - examples/EmbeddedCoderAutosar_SHC/**
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "test"
+  test:
+    # Runs on a pre-configured VM with 
+    runs-on: self-hosted
+    
+    steps:
+      - name: checkout repo content
+        uses: actions/checkout@v3
+      
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+        shell: cmd
+
+      - name: run test workflow
+        run:  python examples/EmbeddedCoderAutosar_SHC/test_workflow_ec.py "${{ github.workspace}}/examples/EmbeddedCoderAutosar_SHC/shc_ec_ar.epp"
+        
+      - name: archive test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: BTC-Test-Report
+          path: report.html
+          

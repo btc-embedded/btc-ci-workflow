@@ -1,0 +1,67 @@
+{
+  "version":"1.1",
+  "metaData":{
+    "name":"TurnOff_Request",
+    "scopePath":"",
+    "architecture":"Wrapper_SeatHeatControl",
+    "description":"- Setting initial conditions to enable controller\r\n",
+    "length":"9"
+  },
+  "vectorContent":{
+    "steps":[ {
+      "step":{
+        "number":"0",
+        "comment":"set initial conditions for controller to be active",
+        "inputs":[ {
+          "SeatOccupied_SeatOccupied":"1"
+        }, {
+          "PowerMgtState_PowerMgtState":"1"
+        }, {
+          "PowerMgtState_PowerMgtState_ErrorStatus":"0"
+        }, {
+          "dsin_HeatingRequest_GetButtonPressed_status@dsin_HeatingRequest_GetButtonPressed_status":"sg(Square, 9, Simulink, true, true, f=2, a=1, o=0)"
+        } ],
+        "parameters":[ {
+          "TemperatureRanges_TemperatureStage1":"30"
+        }, {
+          "TemperatureRanges_TemperatureStage2":"35"
+        }, {
+          "TemperatureRanges_TemperatureStage3":"45"
+        } ]
+      }
+    }, {
+      "step":{
+        "number":"1",
+        "comment":"first button press"
+      }
+    }, {
+      "step":{
+        "number":"3",
+        "comment":"second button press"
+      }
+    }, {
+      "step":{
+        "number":"5",
+        "comment":"third button press"
+      }
+    }, {
+      "step":{
+        "number":"7",
+        "comment":"fourth button press, expect temp = 0",
+        "outputs":[ {
+          "dsout_HeatingActivate_SetHeatingCoil_temp@dsout_HeatingActivate_SetHeatingCoil_temp":"0"
+        } ]
+      }
+    }, {
+      "step":{
+        "number":"8"
+      }
+    } ]
+  },
+  "requirements":[ "SeatHeatingSotfwareRequirements::REQ_TurnOff_Request" ],
+  "interface":{
+    "inputs":[ "SeatOccupied_SeatOccupied", "PowerMgtState_PowerMgtState", "PowerMgtState_PowerMgtState_ErrorStatus", "dsin_HeatingRequest_GetButtonPressed_status@dsin_HeatingRequest_GetButtonPressed_status" ],
+    "parameters":[ "TemperatureRanges_TemperatureStage1", "TemperatureRanges_TemperatureStage2", "TemperatureRanges_TemperatureStage3" ],
+    "outputs":[ "dsout_HeatingActivate_SetHeatingCoil_temp@dsout_HeatingActivate_SetHeatingCoil_temp" ]
+  }
+}

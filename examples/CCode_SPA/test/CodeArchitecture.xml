@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeModel>
+	<Files>
+		<File relPath="../src" name="Lib.c" annotate="no" kind="source" id="ID60"/>
+		<File relPath="../src" name="Unit.c" annotate="yes" kind="source" id="ID63"/>
+		<File relPath="." name="StubCode.c" annotate="no" kind="source" id="ID711"/>
+		<File relPath="." name="InitPointers.c" annotate="no" kind="library" id="ID1405" pointerInitCode="yes"/>
+	</Files>
+	<Functions>
+		<Function name="unit" sampleTime="1.0" fileref="ID63" pointerInitFunc="btc_init_pointer_unit">
+			<Args/>
+			<Interface>
+				<InterfaceObj kind="in" var="stDataGlb" access=".n" scaling="ID2363" min="1.0" max="10.0"/>
+				<InterfaceObj kind="in" var="enSelArrGlb" fileref="ID711"/>
+				<InterfaceObj kind="cal" var="stDataGlb" access=".array1" scaling="ID2363"/>
+				<InterfaceObj kind="cal" var="stDataGlb" access=".array2" scaling="ID2363"/>
+				<InterfaceObj kind="disp" var="arResGlb" scaling="ID2363" fileref="ID711"/>
+				<InterfaceObj kind="out" var="stResultsGlb" access=".resAdd" scaling="ID2363"/>
+				<InterfaceObj kind="out" var="stResultsGlb" access=".resMul" scaling="ID2363"/>
+				<InterfaceObj kind="out" var="stResultsGlb" access=".resAv" scaling="ID2363"/>
+			</Interface>
+		</Function>
+		<Function name="sub_func" sampleTime="1.0" fileref="ID63">
+			<Args>
+				<Arg name="stDataArg">
+					<Variable name="sub_func_BTC_AUTO_stDataArg"/>
+				</Arg>
+			</Args>
+			<Interface>
+				<InterfaceObj kind="in" var="enSelArrArg"/>
+				<InterfaceObj kind="in" var="stDataArg" access="-&gt;n" scaling="ID2363" min="1.0" max="10.0"/>
+				<InterfaceObj kind="cal" var="stDataArg" access="-&gt;array1" scaling="ID2363"/>
+				<InterfaceObj kind="cal" var="stDataArg" access="-&gt;array2" scaling="ID2363"/>
+				<InterfaceObj kind="disp" var="arResGlb" scaling="ID2363" fileref="ID711"/>
+				<InterfaceObj kind="out" var="" access=".resAdd" scaling="ID2363"/>
+				<InterfaceObj kind="out" var="" access=".resMul" scaling="ID2363"/>
+				<InterfaceObj kind="out" var="" access=".resAv" scaling="ID2363"/>
+			</Interface>
+		</Function>
+	</Functions>
+	<Scalings>
+		<Scaling id="ID2363" lsb="1.0" offset="0.0"/>
+	</Scalings>
+</CodeModel>

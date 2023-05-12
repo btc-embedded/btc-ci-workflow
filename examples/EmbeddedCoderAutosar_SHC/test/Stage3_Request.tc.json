@@ -1,0 +1,45 @@
+{
+  "version":"1.1",
+  "metaData":{
+    "name":"Stage3_Request",
+    "scopePath":"",
+    "architecture":"Wrapper_SeatHeatControl",
+    "length":"18"
+  },
+  "vectorContent":{
+    "steps":[ {
+      "step":{
+        "number":"0",
+        "inputs":[ {
+          "SeatOccupied_SeatOccupied":"0"
+        }, {
+          "PowerMgtState_PowerMgtState":"0"
+        }, {
+          "PowerMgtState_PowerMgtState_ErrorStatus":"0"
+        }, {
+          "dsin_HeatingRequest_GetButtonPressed_status@dsin_HeatingRequest_GetButtonPressed_status":"0"
+        } ],
+        "parameters":[ {
+          "TemperatureRanges_TemperatureStage1":"30"
+        }, {
+          "TemperatureRanges_TemperatureStage2":"35"
+        }, {
+          "TemperatureRanges_TemperatureStage3":"45"
+        } ]
+      }
+    }, {
+      "step":{
+        "number":"17",
+        "outputs":[ {
+          "dsout_HeatingActivate_SetHeatingCoil_temp@dsout_HeatingActivate_SetHeatingCoil_temp":"0"
+        } ]
+      }
+    } ]
+  },
+  "requirements":[ "SeatHeatingSotfwareRequirements::REQ_Stage3_Request" ],
+  "interface":{
+    "inputs":[ "SeatOccupied_SeatOccupied", "PowerMgtState_PowerMgtState", "PowerMgtState_PowerMgtState_ErrorStatus", "dsin_HeatingRequest_GetButtonPressed_status@dsin_HeatingRequest_GetButtonPressed_status" ],
+    "parameters":[ "TemperatureRanges_TemperatureStage1", "TemperatureRanges_TemperatureStage2", "TemperatureRanges_TemperatureStage3" ],
+    "outputs":[ "dsout_HeatingActivate_SetHeatingCoil_temp@dsout_HeatingActivate_SetHeatingCoil_temp" ]
+  }
+}

@@ -1,0 +1,11 @@
+# ------------------------------------------------------------------
+# Project-specific config file for BTC EmbeddedPlatform CI workflow
+# 
+# - this config is merged with a global config (if present)
+# - the project-specific config has precedence in case of conflicts
+# ------------------------------------------------------------------
+# pllString: STM; MCDC
+# globalTimeout: 600  # in seconds
+# engines:            # Allowed: ATG, CV or both
+# - ATG
+# atgTimeoutSeconds: 30

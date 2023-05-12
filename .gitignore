@@ -1,0 +1,7 @@
+# Python
+**/__pycache__/
+
+# Simulink
+**/slproj/
+*.slxc
+*.mex64
