@@ -50,7 +50,8 @@ def run_btc_test(epp_file):
     response = ep.post_req(f"scopes/{toplevel_scope_uid}/project-report")
     report = response.json()['result']
     work_dir = os.path.dirname(epp_file)
-    ep.post_req(f"reports/{report['uid']}", { 'exportPath': work_dir })
+    # export project report to a file called 'report.html'
+    ep.post_req(f"reports/{report['uid']}", { 'exportPath': work_dir, 'newName': 'report' })
 
     # Save *.epp
     ep.put_req('profiles', { 'path': epp_file })
