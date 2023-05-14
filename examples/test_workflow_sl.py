@@ -35,7 +35,7 @@ def run_btc_test(epp_file):
     rbt_exec_payload = {
         'UIDs': scope_uids,
         'data' : {
-            'execConfigNames' : [ 'SL MIL' ]
+            'execConfigNames' : [ 'SL MIL (Toplevel)' ]
         }
     }
     ep.post_req('scopes/test-execution-rbt', rbt_exec_payload)

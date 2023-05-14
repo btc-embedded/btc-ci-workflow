@@ -11,6 +11,15 @@ def run_btc_test(epp_file):
     ep = EP(config=config)
 
     # Applying preferences to use the correct Matlab version & compiler
+    try:
+        response = ep.get_req('preferences/GENERAL_COMPILER_SETTING')
+        pref = response.json()
+        if not pref['preferenceValue'] and config['compiler']:
+            preferences = [ { 'preferenceName' : 'GENERAL_COMPILER_SETTING', 'preferenceValue' : config['compiler'] } ]
+            ep.put_req('preferences', preferences)
+    except:
+        pass
+    # Matlab
     preferences = []
     if config['matlabVersion']:
         preferences.append( { 'preferenceName': 'GENERAL_MATLAB_VERSION', 'preferenceValue': 'CUSTOM' } )

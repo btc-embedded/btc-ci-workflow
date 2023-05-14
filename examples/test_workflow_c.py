@@ -14,14 +14,15 @@ def run_btc_test(epp_file):
     ep.get_req(f"profiles/{epp_file}?discardCurrentProfile=true")
     
     # Applying preferences to use the correct compiler
-    response = ep.get_req('preferences/GENERAL_COMPILER_SETTING')
-    pref = response.json()
-    if not pref['preferenceValue']:
-        if config['compiler']:
+    try:
+        response = ep.get_req('preferences/GENERAL_COMPILER_SETTING')
+        pref = response.json()
+        if not pref['preferenceValue'] and config['compiler']:
             preferences = [ { 'preferenceName' : 'GENERAL_COMPILER_SETTING', 'preferenceValue' : config['compiler'] } ]
-        else: # fallback
-            preferences = [ { 'preferenceName': 'GENERAL_COMPILER_SETTING', 'preferenceValue': 'MinGW64 (64bit)' } ]
-        ep.put_req('preferences', preferences)
+            ep.put_req('preferences', preferences)
+    except Exception as e:
+        print(e)
+        pass
 
     # Update architecture (incl. code generation)
     # ep.put_req('architectures')
