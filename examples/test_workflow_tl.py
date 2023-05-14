@@ -12,14 +12,11 @@ def run_btc_test(epp_file):
 
     # Applying preferences to use the correct compiler
     try:
-        response = ep.get_req('preferences/GENERAL_COMPILER_SETTING')
-        pref = response.json()
-        if not pref['preferenceValue'] and config['compiler']:
+        if config['compiler']:
             preferences = [ { 'preferenceName' : 'GENERAL_COMPILER_SETTING', 'preferenceValue' : config['compiler'] } ]
             ep.put_req('preferences', preferences)
     except Exception as e:
         print(e)
-        pass
 
     # Applying preferences to use the correct Matlab version & compiler
     preferences = []
