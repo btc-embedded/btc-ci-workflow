@@ -1,26 +1,12 @@
 ![test_ec](https://github.com/thabok/btc-ci-workflow/actions/workflows/test_ec.yml/badge.svg)
 
----
-title: BTC Embedded Platform - RESTful API documentation v23.1p0
-language_tabs:
-  - http: HTTP
-language_clients:
-  - shell: curl
-toc_footers: []
-includes: []
-search: true
-highlight_theme: darkula
-headingLevel: 2
-
----
-
 <!-- Generator: Widdershins v4.0.1 -->
 
 <h1 id="btc-embedded-platform-restful-api-documentation">BTC Embedded Platform REST API v23.1p0</h1>
 
 > Scroll down for code samples, example requests and responses.
 
-Email: <a href="mailto:support@btc-embedded.com">Support</a> 
+Email: <a href="mailto:support@btc-embedded.com">support@btc-embedded.com</a> 
 
 <h1 id="btc-embedded-platform-restful-api-documentation-back-to-back-tests">Back-to-Back tests</h1>
 
