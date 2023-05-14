@@ -38,7 +38,9 @@ class EPRestApi:
                    ' -Dep.licensing.package=' + lic + \
                    ' -Dep.rest.port=' + self._PORT_
             subprocess.Popen(args, stdout=open(os.devnull, 'wb'), stderr=subprocess.STDOUT)
+            self.actively_started = True
         else:
+            self.actively_started = False
             return
         while not self.is_rest_service_available():
             time.sleep(2)
@@ -50,15 +52,13 @@ class EPRestApi:
         print('Exiting EP... please wait while we save your data.')
         request = requests.delete(self._url('/application'))
         print(request.text)
-        print("Data saved!")
         self.definitively_closed = True
 
     def __del__(self):
         # might already be closed. not our problem.
-        if not self.definitively_closed:
+        if self.actively_started and not self.definitively_closed:
             try: 
                 self.close_application()
-                pass
             except:
                 pass
 

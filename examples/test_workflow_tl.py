@@ -10,6 +10,9 @@ def run_btc_test(epp_file):
     config = get_merged_config()
     ep = EP(config=config)
 
+    # Load a BTC EmbeddedPlatform profile (*.epp)
+    ep.get_req(f"profiles/{epp_file}?discardCurrentProfile=true")
+    
     # Applying preferences to use the correct compiler
     try:
         if config['compiler']:
@@ -27,9 +30,6 @@ def run_btc_test(epp_file):
         preferences.append( { 'preferenceName' : 'SIMULATION_MIL_NUMBER_OF_MATLAB_INSTANCES', 'preferenceValue' : config['maximumNumberOfMatlabs'] } )
     if preferences:
         ep.put_req('preferences', preferences)
-
-    # Load a BTC EmbeddedPlatform profile (*.epp)
-    ep.get_req(f"profiles/{epp_file}?discardCurrentProfile=true")
 
     # Update architecture (incl. code generation via TL)
     # ep.put_req('architectures')
