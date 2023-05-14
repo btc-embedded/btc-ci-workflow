@@ -1,10 +1,13 @@
 ![test_ec](https://github.com/thabok/btc-ci-workflow/actions/workflows/test_ec.yml/badge.svg)
 
-<h1 id="btc-embedded-platform-restful-api-documentation">BTC Embedded Platform REST API v23.1p0</h1>
+<h1 id="btc-embedded-platform-restful-api-documentation">BTC Embedded Platform - RESTful API documentation v23.1p0</h1>
 
-> Scroll down for code samples, example requests and responses.
+> Scroll down for code samples, example requests and responses. Select a language for code samples from the tabs above or the mobile navigation menu.
 
-Email: <a href="mailto:support@btc-embedded.com">support@btc-embedded.com</a> 
+This is the documentation for the BTC Embedded Platform RESTful API.
+
+Email: <a href="mailto:support@btc-embedded.com">Support</a> 
+License: <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache 2.0</a>
 
 <h1 id="btc-embedded-platform-restful-api-documentation-back-to-back-tests">Back-to-Back tests</h1>
 
@@ -19745,4 +19748,3 @@ The detailed test results mapped by execution kind
 |---|---|---|---|---|
 |folderKind|string|true|none|The folder kind. Possible: "RB_TEST_CASE", "EXECUTION_RECORD", "STIMULI_VECTOR"|
 |folderName|string|false|none|The folder name. This parameter is optional|
-
