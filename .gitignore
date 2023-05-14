@@ -2,6 +2,10 @@
 **/__pycache__/
 
 # Simulink
-**/slproj/
+**/slprj/
 *.slxc
+*.slx.autosave
 *.mex64
+
+# BTC EmbeddedPlatform
+**/ep_sim/
