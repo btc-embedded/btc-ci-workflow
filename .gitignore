@@ -1,3 +1,6 @@
+# General
+*.html
+
 # Python
 **/__pycache__/
 
@@ -9,4 +12,6 @@
 
 # BTC EmbeddedPlatform
 **/ep_sim/
-*.html
+
+# MacOS
+.DS_Store
