@@ -63,19 +63,19 @@ class EPRestApi:
                 pass
 
     # Performs a get request on the given url extension
-    def get_req(self, urlappendix):
+    def get_req(self, urlappendix, message=None):
         if not 'progress' in urlappendix:
             # print this unless it's a progress query (to avoid flooding the console)
-            print('Fetching from: '+ self._url(urlappendix))
+            if message: print(message)
         response = requests.get(self._url(urlappendix.replace('\\', '/').replace(' ', '%20')))
         if not response.ok:
             raise Exception(f"Error during request POST {urlappendix}: {response.status_code}: {response.content}")
         return self.check_long_running(response)
 
     # Performs a post request on the given url extension. The optional requestBody contains the information necessary for the request
-    def post_req(self, urlappendix, requestBody=None):
+    def post_req(self, urlappendix, requestBody=None, message=None):
         url = urlappendix.replace('\\', '/').replace(' ', '%20')
-        print('Posting to: ' +  self._url(url))
+        if message: print(message)
         if requestBody == None:
             response = requests.post(self._url(url))
         else:
@@ -85,9 +85,9 @@ class EPRestApi:
         return self.check_long_running(response)
 
     # Performs a post request on the given url extension. The optional requestBody contains the information necessary for the request
-    def put_req(self, urlappendix, requestBody=None):
+    def put_req(self, urlappendix, requestBody=None, message=None):
         url = urlappendix.replace('\\', '/').replace(' ', '%20')
-        print('Posting to: ' +  self._url(url))
+        if message: print(message)
         if requestBody == None:
             response = requests.put(self._url(url))
         else:
