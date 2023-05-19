@@ -1,4 +1,9 @@
-// Pipeline for the BTC tests via Python & BTC Rest API
+/* 
+ * Example for BTC test of a TargetLink model with GitLab CI
+ *
+ * - This example should provide some initial directions.
+ * - It is untested and needs to be adapted to work
+ */
 pipeline {
     // run on an agent with BTC, Matlab and Python
     agent { label "BTC && MATLAB && PYTHON" }
@@ -22,7 +27,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 // Run the python script to invoke tests
-                bat "python examples/test_workflow_ec.py \"${WORKSPACE}/examples/EmbeddedCoderAutosar_SHC/shc_ec_ar.epp\""
+                bat "python examples/test_workflow_ec.py \"${WORKSPACE}/examples/TargetLink_ACC/acc_tl.epp\""
             }
         }
 
@@ -30,7 +35,7 @@ pipeline {
             steps {
                 // Publish the HTML report
                 publishHTML([
-                    reportDir: 'examples/EmbeddedCoderAutosar_SHC',
+                    reportDir: 'examples/TargetLink_ACC',
                     reportFiles: 'report.html',
                     reportName: 'BTC Test Report'
                 ])

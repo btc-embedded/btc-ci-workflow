@@ -1,11 +1,10 @@
 import os
 import sys
 
+import util
 from api.btc_config import get_merged_config
 from api.btc_rest_api import EPRestApi as EP
 
-EP_VERSION = '23.1p0'
-EP_INSTALL_LOCATION = f"C:/Program Files/BTC/ep{EP_VERSION}"
 
 def run_btc_test(epp_file):
     # BTC EmbeddedPlatform API object
@@ -13,7 +12,7 @@ def run_btc_test(epp_file):
     ep = EP(config=config)
 
     # Load a BTC EmbeddedPlatform profile (*.epp)
-    ep.get_req('profiles/' + epp_file + '?discardCurrentProfile=true')
+    ep.get_req('profiles/' + epp_file + '?discardCurrentProfile=true', message="Loading profile")
 
     # Applying preferences to use the correct Matlab version & compiler
     preferences = []
@@ -35,13 +34,15 @@ def run_btc_test(epp_file):
     rbt_exec_payload = {
         'UIDs': scope_uids,
         'data' : {
-            'execConfigNames' : [ 'SL MIL (Toplevel)' ]
+            'execConfigNames' : [ 'SL MIL (Toplevel)' ],
+            'generateModelCoverageReport' : True
         }
     }
-    ep.post_req('scopes/test-execution-rbt', rbt_exec_payload)
+    ep.post_req('scopes/test-execution-rbt', rbt_exec_payload, message="Executing requirements-based tests")
+    util.print_rbt_results(response)
 
     # Create project report
-    response = ep.post_req(f"scopes/{toplevel_scope_uid}/project-report")
+    response = ep.post_req(f"scopes/{toplevel_scope_uid}/project-report", message="Creating test report")
     response = response.json()
     report = response['result']
     work_dir = os.path.dirname(epp_file)
@@ -49,7 +50,7 @@ def run_btc_test(epp_file):
     ep.post_req(f"reports/{report['uid']}", { 'exportPath': work_dir, 'newName': 'report' })
 
     # Save *.epp
-    ep.put_req('profiles', { 'path': epp_file })
+    ep.put_req('profiles', { 'path': epp_file }, message="Saving profile")
 
     print('Finished with workflow.')
 

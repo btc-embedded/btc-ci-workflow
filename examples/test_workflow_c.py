@@ -1,6 +1,7 @@
 import os
 import sys
 
+import util
 from api.btc_config import get_merged_config
 from api.btc_rest_api import EPRestApi as EP
 
@@ -11,18 +12,13 @@ def run_btc_test(epp_file):
     ep = EP(config=config)
 
     # Load a BTC EmbeddedPlatform profile (*.epp)
-    ep.get_req(f"profiles/{epp_file}?discardCurrentProfile=true")
+    ep.get_req(f"profiles/{epp_file}?discardCurrentProfile=true", message="Loading profile")
     
     # Applying preferences to use the correct compiler
-    try:
-        if config['compiler']:
-            preferences = [ { 'preferenceName' : 'GENERAL_COMPILER_SETTING', 'preferenceValue' : config['compiler'] } ]
-            ep.put_req('preferences', preferences)
-    except Exception as e:
-        print(e)
+    util.set_compiler(ep, config)
 
-    # Update architecture (incl. code generation)
-    # ep.put_req('architectures')
+    # Update architecture
+    # ep.put_req('architectures', message="Architecture Update...")
 
     # Execute requirements-based tests
     response = ep.get_req('scopes')
@@ -35,18 +31,19 @@ def run_btc_test(epp_file):
             'execConfigNames' : [ 'SIL' ]
         }
     }
-    ep.post_req('scopes/test-execution-rbt', rbt_exec_payload)
+    ep.post_req('scopes/test-execution-rbt', rbt_exec_payload, message="Executing requirements-based tests")
+    rbt_coverage = ep.get_req(f"scopes/{toplevel_scope_uid}/coverage-results-rbt?goal-types=MCDC")
+    util.print_rbt_results(response, rbt_coverage)
 
     # Create project report
-    response = ep.post_req(f"scopes/{toplevel_scope_uid}/project-report") # ?template-name=rbt
-    response = response.json()
-    report = response['result']
+    response = ep.post_req(f"scopes/{toplevel_scope_uid}/project-report", message="Creating test report")
+    report = response.json()['result']
     work_dir = os.path.dirname(epp_file)
     # export project report to a file called 'report.html'
     ep.post_req(f"reports/{report['uid']}", { 'exportPath': work_dir, 'newName': 'report' })
 
     # Save *.epp
-    ep.put_req('profiles', { 'path': epp_file })
+    ep.put_req('profiles', { 'path': epp_file }, message="Saving profile")
 
     print('Finished with workflow.')
 

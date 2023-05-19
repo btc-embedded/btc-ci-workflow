@@ -1,0 +1,44 @@
+# Example for BTC test of a TargetLink model with GitLab CI
+#
+# - This example should provide some initial directions.
+# - It is untested and needs to be adapted to work
+
+stages:
+  - build
+  - test
+  - publish
+
+variables:
+  GIT_REPO_URL: "http://myrepo"
+
+before_script:
+  - apt-get update -qq
+  - apt-get install -y python3-pip
+
+build:
+  stage: build
+  script:
+    - git clone $GIT_REPO_URL
+    - cd myrepo
+    - pip install -r requirements.txt
+
+test:
+  stage: test
+  script:
+    - cd myrepo
+    - python examples/test_workflow_tl.py examples/TargetLink_ACC/acc_tl.epp
+
+publish:
+  stage: publish
+  script:
+    - cd myrepo
+    - mv results/report.html report.html
+    # Additional steps to publish the report (e.g., using GitLab Pages, uploading to an artifact server, etc.)
+  artifacts:
+    paths:
+      - myrepo/report.html
+
+# Define the self-hosted runner configuration
+runner:
+  tags:
+    - my-self-hosted-runner

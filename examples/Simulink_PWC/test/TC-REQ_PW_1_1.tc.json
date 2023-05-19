@@ -46,6 +46,7 @@
   "interface":{
     "inputs":[ "driver_up", "driver_down", "passenger_up", "passenger_down", "obstacle_position", "window_position" ],
     "parameters":[ "auto_down_time", "auto_up_time", "emergency_down_time", "position_endstop_top" ],
+    "locals":[ "detection_endstop_bottom", "detection_endstop_top" ],
     "outputs":[ "obstacle_detection", "move_up", "move_down" ]
   }
 }

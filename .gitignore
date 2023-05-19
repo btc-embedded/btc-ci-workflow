@@ -10,8 +10,5 @@
 *.slx.autosave
 *.mex64
 
-# BTC EmbeddedPlatform
-**/ep_sim/
-
 # MacOS
 .DS_Store
