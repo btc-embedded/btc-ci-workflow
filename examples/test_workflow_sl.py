@@ -34,17 +34,16 @@ def run_btc_test(epp_file):
     rbt_exec_payload = {
         'UIDs': scope_uids,
         'data' : {
-            'execConfigNames' : [ 'SL MIL (Toplevel)' ],
+            'execConfigNames' : [ 'SL MIL' ],
             'generateModelCoverageReport' : True
         }
     }
-    ep.post_req('scopes/test-execution-rbt', rbt_exec_payload, message="Executing requirements-based tests")
+    response = ep.post_req('scopes/test-execution-rbt', rbt_exec_payload, message="Executing requirements-based tests")
     util.print_rbt_results(response)
 
     # Create project report
     response = ep.post_req(f"scopes/{toplevel_scope_uid}/project-report", message="Creating test report")
-    response = response.json()
-    report = response['result']
+    report = response.json()['result']
     work_dir = os.path.dirname(epp_file)
     # export project report to a file called 'report.html'
     ep.post_req(f"reports/{report['uid']}", { 'exportPath': work_dir, 'newName': 'report' })

@@ -32,7 +32,7 @@ def run_btc_test(epp_file):
         }
     }
     ep.post_req('scopes/test-execution-rbt', rbt_exec_payload, message="Executing requirements-based tests")
-    rbt_coverage = ep.get_req(f"scopes/{toplevel_scope_uid}/coverage-results-rbt?goal-types=MCDC")
+    response = rbt_coverage = ep.get_req(f"scopes/{toplevel_scope_uid}/coverage-results-rbt?goal-types=MCDC")
     util.print_rbt_results(response, rbt_coverage)
 
     # Create project report
