@@ -29,6 +29,8 @@ jobs:
       - name: Archive test results
         uses: actions/upload-artifact@v3
         with:
-          name: BTC-Test-Report
-          path: examples/CCode_SPA/report.html
+          name: TestResults
+          path: |
+            examples/CCode_SPA/spa_c.epp
+            examples/CCode_SPA/report.html
           
