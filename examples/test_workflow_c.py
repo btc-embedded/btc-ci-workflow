@@ -8,7 +8,8 @@ from api.btc_rest_api import EPRestApi as EP
 
 def run_btc_test(epp_file):
     # BTC EmbeddedPlatform API object
-    config = get_merged_config()
+    work_dir = os.path.dirname(epp_file)
+    config = get_merged_config(project_directory=work_dir)
     ep = EP(config=config)
 
     # Load a BTC EmbeddedPlatform profile (*.epp)
@@ -38,7 +39,6 @@ def run_btc_test(epp_file):
     # Create project report
     response = ep.post_req(f"scopes/{toplevel_scope_uid}/project-report", message="Creating test report")
     report = response.json()['result']
-    work_dir = os.path.dirname(epp_file)
     # export project report to a file called 'report.html'
     ep.post_req(f"reports/{report['uid']}", { 'exportPath': work_dir, 'newName': 'report' })
 
