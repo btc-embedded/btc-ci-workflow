@@ -29,6 +29,8 @@ jobs:
       - name: Archive test results
         uses: actions/upload-artifact@v3
         with:
-          name: BTC-Test-Report
-          path: examples/Simulink_PWC/report.html
+          name: TestResults
+          path: |
+            examples/Simulink_PWC/pwc_sl.epp
+            examples/Simulink_PWC/report.html
           

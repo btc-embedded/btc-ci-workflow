@@ -29,6 +29,8 @@ jobs:
       - name: Archive test results
         uses: actions/upload-artifact@v3
         with:
-          name: BTC-Test-Report
-          path: examples/EmbeddedCoderAutosar_SHC/report.html
+          name: TestResults
+          path: |
+            examples/EmbeddedCoderAutosar_SHC/shc_ec_ar.epp
+            examples/EmbeddedCoderAutosar_SHC/report.html
           

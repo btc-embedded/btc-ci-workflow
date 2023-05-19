@@ -29,6 +29,8 @@ jobs:
       - name: Archive test results
         uses: actions/upload-artifact@v3
         with:
-          name: BTC-Test-Report
-          path: examples/TargetLink_ACC/report.html
+          name: TestResults
+          path: |
+            examples/TargetLink_ACC/acc_tl.epp
+            examples/TargetLink_ACC/report.html
           
