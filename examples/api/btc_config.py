@@ -10,7 +10,7 @@ def get_global_config():
     thisfile = os.path.abspath(__file__).replace('\\', '/')
     global_config_file = os.path.dirname(thisfile) + '/btc_config.yml'
     config = __load_config(global_config_file)
-    return config
+    return config, global_config_file
 
 def get_project_specific_config(project_directory=os.getcwd()):
     """Returns the project-specific config, which is the first file
@@ -21,11 +21,12 @@ def get_project_specific_config(project_directory=os.getcwd()):
     for root, _, files in os.walk(project_directory):
         for name in files:
             if fnmatch.fnmatch(name, 'btc_project_config.yml'):
-                project_specific_config = __load_config(root + '/' + name)
+                path = root + '/' + name
+                project_specific_config = __load_config(path)
                 break
-    return project_specific_config
+    return project_specific_config, path
 
-def get_merged_config(project_directory=os.getcwd()):
+def get_merged_config(project_directory=os.getcwd(), silent=False):
     """Returns a merged config that combines the global config from the
     parent dir of the file 'btc_config.py' with a project-specific config.
     - The project-specific config is the first file called 'btc_config.yaml'
@@ -34,11 +35,15 @@ def get_merged_config(project_directory=os.getcwd()):
     used.
     - The configs are merged by giving precedence to any project-specific
     settings."""
-    # get the project specific config
-    project_specific_config = get_project_specific_config(project_directory)
-
     # get the global config
-    config = get_global_config()
+    config, path = get_global_config()
+    if config and not silent:
+        print(f"Applying global config from {path}")
+
+    # get the project specific config
+    project_specific_config, path = get_project_specific_config(project_directory)
+    if project_specific_config and not silent:
+        print(f"Applying project-specific config from {path}")
 
     # merge them and return the merged config
     config.update(project_specific_config)
