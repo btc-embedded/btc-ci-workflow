@@ -46,9 +46,9 @@ Let's have a quick look at the structure of this repository:
 - **.gitlab-ci.yml** shows how to integrate a Python & REST-API-based BTC test workflow with GitLab CI
 
 ## Other files
-- **EPRestApiDocs_23.1.pdf**: PDF-version of the BTC EmbeddedPlatform Rest API documenation. Refer to this document if you want to extend/adapt the workflow scripts to know more about the different endpoints and parameters.
+- **EPRestApiDocs_23.1.pdf**: PDF-version of the BTC EmbeddedPlatform Rest API documentation. Refer to this document if you want to extend/adapt the workflow scripts to know more about the different endpoints and parameters.
 - Do you want to make sure that no unwanted files sneak their way into your git repository and that binary files are treated as such?
-    - The **.gitignore** and **.gitattributes** files can serve as a great entrypoint for model-based developent projects.
+    - The **.gitignore** and **.gitattributes** files can serve as a great entrypoint for model-based development projects.
     - **.gitignore** prevents untracked files and folders from being added, if they match one of the specified patterns
     - **.gitattributes** tells git how to handle certain files if they are tracked, especially to prevent auto-merge attempts.
 - **requirements.txt** lists the Python modules required by the scripts
