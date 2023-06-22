@@ -10,8 +10,10 @@ from api.btc_rest_api import EPRestApi as EP
 
 def run_btc_test(test_config):    
     # 1. record reference behavior
-    #mil_executions, sil_executions = btc_migration_source(test_config)
-    mil_executions, sil_executions = get_existing_references(os.path.abspath(os.path.join(os.path.dirname(test_config), 'execution_records')))
+    mil_executions, sil_executions = btc_migration_source(test_config)
+
+    # alternative call to skip the migration_source step if reference execution records are already present
+    # mil_executions, sil_executions = get_existing_references(os.path.abspath(os.path.join(os.path.dirname(test_config), 'execution_records')))
 
     # 2. record comparison behavior and compare (regr. test)
     btc_migration_target(test_config, mil_executions, sil_executions)
