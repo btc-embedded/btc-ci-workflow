@@ -1,0 +1,15 @@
+# ------------------------------------------------------------------
+# By default, this expects the model to be auto-migratable from
+# the source to the target Matlab version.
+# 
+# Alternatively, you can explicitly specify the source and target model (also viable to validate same behavior after refactoring):
+#   - sourceModel
+#   - targetModel
+# ------------------------------------------------------------------
+modelFile: model/SeatHeatControl.slx
+scriptFile: model/init.m
+needsWrapper: true
+
+sourceMatlabVersion: MATLAB R2022b (64-bit)
+
+targetMatlabVersion: MATLAB R2022b (64-bit)

@@ -2,6 +2,8 @@ import os
 import subprocess
 import time
 
+from .btc_config import get_global_config
+
 try:
     import requests
 except Exception:
@@ -58,7 +60,8 @@ class EPRestApi:
         # might already be closed. not our problem.
         if self.actively_started and not self.definitively_closed:
             try: 
-                self.close_application()
+                pass
+                #self.close_application()
             except:
                 pass
 
@@ -123,3 +126,9 @@ class EPRestApi:
 
     def poll_long_running(self, jobID):
         return self.get_req('/progress?progress-id=' + jobID)
+
+
+if __name__ == '__main__':
+    cfg, _ = get_global_config()
+    EPRestApi(config=cfg)
+    

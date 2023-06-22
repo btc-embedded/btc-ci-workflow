@@ -12,12 +12,14 @@ def get_global_config():
     config = __load_config(global_config_file)
     return config, global_config_file
 
-def get_project_specific_config(project_directory=os.getcwd()):
+def get_project_specific_config(project_directory=os.getcwd(), project_config=None):
     """Returns the project-specific config, which is the first file
     called 'btc_project_config.yml' that is found when recursively searching
     the specified project directory. If no project directory is specified,
     the current working directory is used."""
     project_specific_config = {}
+    path = None
+    if project_config: return __load_config(project_config), project_config
     for root, _, files in os.walk(project_directory):
         for name in files:
             if fnmatch.fnmatch(name, 'btc_project_config.yml'):
@@ -26,7 +28,7 @@ def get_project_specific_config(project_directory=os.getcwd()):
                 break
     return project_specific_config, path
 
-def get_merged_config(project_directory=os.getcwd(), silent=False):
+def get_merged_config(project_directory=os.getcwd(), silent=False, project_config=None):
     """Returns a merged config that combines the global config from the
     parent dir of the file 'btc_config.py' with a project-specific config.
     - The project-specific config is the first file called 'btc_config.yaml'
@@ -41,7 +43,7 @@ def get_merged_config(project_directory=os.getcwd(), silent=False):
         print(f"Applying global config from {path}")
 
     # get the project specific config
-    project_specific_config, path = get_project_specific_config(project_directory)
+    project_specific_config, path = get_project_specific_config(project_directory, project_config)
     if project_specific_config and not silent:
         print(f"Applying project-specific config from {path}")
 
