@@ -8,4 +8,5 @@
 # globalTimeout: 600  # in seconds
 # engines:            # Allowed: ATG, CV or both
 # - ATG
+# - CV
 # atgTimeoutSeconds: 30
