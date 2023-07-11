@@ -7,6 +7,7 @@ on:
       - .github/workflows/test_sl.yml
       - examples/test_workflow_sl.py
       - examples/Simulink_PWC/**
+  workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
