@@ -1,3 +1,6 @@
+import platform
+
+
 def print_rbt_results(response, coverage_response=None):
     """Example on how to access coverage and test result data.
     Depending on your desired CI-workflow, you would usually not just print
@@ -33,8 +36,11 @@ def print_b2b_results(response, coverage_response=None):
 def set_compiler(ep, config):
     """Sets the configured compiler"""
     try:
-        if config['compiler']:
-            preferences = [ { 'preferenceName' : 'GENERAL_COMPILER_SETTING', 'preferenceValue' : config['compiler'] } ]
-            ep.put_req('preferences', preferences)
+        if platform.system() == 'Windows':
+            if config['compiler']:
+                preferences = [ { 'preferenceName' : 'GENERAL_COMPILER_SETTING', 'preferenceValue' : config['compiler'] } ]
+                ep.put_req('preferences', preferences)
+        else: # linux/docker
+            ep.put_req('preferences', [ { 'preferenceName' : 'GENERAL_COMPILER_SETTING', 'preferenceValue' : 'GCC (64bit)' } ])
     except Exception as e:
         pass

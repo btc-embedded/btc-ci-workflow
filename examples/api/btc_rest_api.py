@@ -1,4 +1,5 @@
 import os
+import platform
 import subprocess
 import time
 
@@ -13,37 +14,37 @@ except Exception:
 
 class EPRestApi:
     #Starter for the EP executable
-    def __init__(self, host='http://localhost', port=29267, version=None, install_location=None, lic='', config=None):
+    def __init__(self, host='http://localhost', port=1337, version=None, install_location=None, lic='', config=None):
         if config and config['installationRoot'] and config['epVersion']:
             version = config['epVersion']
             install_location = f"{config['installationRoot']}/ep{config['epVersion']}"
         self._PORT_ = str(port)
         self._HOST_ = host
         self.definitively_closed = False
+        self.actively_started = False
         if not self.is_rest_service_available():
-            appdata_location = os.environ['APPDATA'].replace('\\', '/') + f"/BTC/ep/{version}/"
-            print('Waiting for BTC EmbeddedPlatform to be available:')
-            ml_port = 29300 + (port % 100)
-            if ml_port == port:
-                ml_port -= 100
-            args = f"{install_location}/rcp/ep.exe" + \
-                   ' -clearPersistedState' + \
-                   ' -application' + " ep.application.headless" + \
-                   ' -nosplash' + \
-                   ' -vmargs' + \
-                   ' -Dep.runtime.batch=ep' + \
-                   ' -Dep.runtime.api.port=' + str(ml_port) + \
-                   ' -Dosgi.configuration.area.default="' + appdata_location + self._PORT_ + '/configuration"' + \
-                   ' -Dosgi.instance.area.default="' + appdata_location + self._PORT_ + '/workspace"' + \
-                   ' -Dep.configuration.logpath=AppData/Roaming/BTC/ep/' + version + '/' + self._PORT_ + '/logs' + \
-                   ' -Dep.runtime.workdir=BTC/ep/' + version + '/' + self._PORT_ + \
-                   ' -Dep.licensing.package=' + lic + \
-                   ' -Dep.rest.port=' + self._PORT_
-            subprocess.Popen(args, stdout=open(os.devnull, 'wb'), stderr=subprocess.STDOUT)
-            self.actively_started = True
-        else:
-            self.actively_started = False
-            return
+            if platform.system() == 'Windows':
+                appdata_location = os.environ['APPDATA'].replace('\\', '/') + f"/BTC/ep/{version}/"
+                print('Waiting for BTC EmbeddedPlatform to be available:')
+                ml_port = 29300 + (port % 100)
+                if ml_port == port:
+                    ml_port -= 100
+                args = f"{install_location}/rcp/ep.exe" + \
+                    ' -clearPersistedState' + \
+                    ' -application' + " ep.application.headless" + \
+                    ' -nosplash' + \
+                    ' -vmargs' + \
+                    ' -Dep.runtime.batch=ep' + \
+                    ' -Dep.runtime.api.port=' + str(ml_port) + \
+                    ' -Dosgi.configuration.area.default="' + appdata_location + self._PORT_ + '/configuration"' + \
+                    ' -Dosgi.instance.area.default="' + appdata_location + self._PORT_ + '/workspace"' + \
+                    ' -Dep.configuration.logpath=AppData/Roaming/BTC/ep/' + version + '/' + self._PORT_ + '/logs' + \
+                    ' -Dep.runtime.workdir=BTC/ep/' + version + '/' + self._PORT_ + \
+                    ' -Dep.licensing.package=' + lic + \
+                    ' -Dep.rest.port=' + self._PORT_
+                subprocess.Popen(args, stdout=open(os.devnull, 'wb'), stderr=subprocess.STDOUT)
+                self.actively_started = True
+        else: return
         while not self.is_rest_service_available():
             time.sleep(2)
             print('.', end='')

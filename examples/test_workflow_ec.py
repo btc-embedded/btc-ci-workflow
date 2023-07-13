@@ -1,5 +1,6 @@
 import os
 import sys
+from urllib.parse import quote
 
 import util
 from api.btc_config import get_merged_config, get_vector_gen_config
@@ -13,7 +14,7 @@ def run_btc_test(epp_file):
     ep = EP(config=config)
 
     # Load a BTC EmbeddedPlatform profile (*.epp)
-    ep.get_req('profiles/' + epp_file + '?discardCurrentProfile=true', message="Loading profile")
+    ep.get_req('profiles/' + quote(epp_file, safe="") + '?discardCurrentProfile=true', message="Loading profile")
 
     # Applying preferences to use the correct compiler
     util.set_compiler(ep, config)
