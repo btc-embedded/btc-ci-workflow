@@ -20,7 +20,8 @@ def run_btc_test(epp_file):
     util.set_compiler(ep, config)
         
     # Matlab
-    preferences = []
+    preferences = [ {'preferenceName':'EC_ARCHITECTURE_UPDATE_CODE_META_SOURCE','preferenceValue':'MODEL_ANALYSIS'},
+                    {'preferenceName':'EC_ARCHITECTURE_UPDATE_MAPPING_SOURCE','preferenceValue':'MODEL_ANALYSIS'}]
     if config['matlabVersion']:
         preferences.append( { 'preferenceName': 'GENERAL_MATLAB_VERSION', 'preferenceValue': 'CUSTOM' } )
         preferences.append( { 'preferenceName' : 'GENERAL_MATLAB_CUSTOM_VERSION', 'preferenceValue' : config['matlabVersion'] } )
@@ -30,7 +31,17 @@ def run_btc_test(epp_file):
         ep.put_req('preferences', preferences)
 
     # Update architecture (incl. code generation)
-    # ep.put_req('architectures', message="Architecture Update...")
+    payload = {
+        "slModelFile": "/Users/thabok/Documents/GitHub/btc-ci-workflow/examples/EmbeddedCoderAutosar_SHC/model/Wrapper_SeatHeatControl.slx",
+        "slInitScript": "/Users/thabok/Documents/GitHub/btc-ci-workflow/examples/EmbeddedCoderAutosar_SHC/model/init_Wrapper_SeatHeatControl.m",
+        # "addModelInfo": "C:/Models/PowerWindow/ml2017b_tl50/ModelInfoSl.xml",
+        # "tlModelFile": "C:/Models/PowerWindow/ml2017b_tl50/powerwindow_tl_v01.mdl",
+        # "tlInitScript": "C:/Models/PowerWindow/ml2017b_tl50/start.m",
+        # "environment": "C:/Models/PowerWindow/ml2017b_tl50/env.xml"
+    }
+    ep.put_req('architectures/model-paths', payload) # workaround for http://jira.osc.local:8080/browse/EP-3183
+    ep.put_req('profiles', { 'path': epp_file }) # workaround for http://jira.osc.local:8080/browse/EP-2752
+    ep.put_req('architectures', message="Architecture Update")
 
     # Execute requirements-based tests
     response = ep.get_req('scopes')
