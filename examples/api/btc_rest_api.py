@@ -3,7 +3,7 @@ import platform
 import subprocess
 import time
 
-from .btc_config import get_global_config
+from btc_config import get_global_config
 
 try:
     import requests
@@ -15,6 +15,8 @@ except Exception:
 class EPRestApi:
     #Starter for the EP executable
     def __init__(self, host='http://localhost', port=1337, version=None, install_location=None, lic='', config=None):
+        if not (host and port and version and install_location) and not config:
+            config = get_global_config()
         if config and config['installationRoot'] and config['epVersion']:
             version = config['epVersion']
             install_location = f"{config['installationRoot']}/ep{config['epVersion']}"
@@ -75,6 +77,14 @@ class EPRestApi:
         if not response.ok:
             raise Exception(f"Error during request POST {urlappendix}: {response.status_code}: {response.content}")
         return self.check_long_running(response)
+    
+    # Performs a delete request on the given url extension
+    def delete_req(self, urlappendix, message=None):
+        if message: print(message)
+        response = requests.delete(self._url(urlappendix.replace('\\', '/').replace(' ', '%20')))
+        if not response.ok:
+            raise Exception(f"Error during request POST {urlappendix}: {response.status_code}: {response.content}")
+        return self.check_long_running(response)
 
     # Performs a post request on the given url extension. The optional requestBody contains the information necessary for the request
     def post_req(self, urlappendix, requestBody=None, message=None):
@@ -130,6 +140,5 @@ class EPRestApi:
 
 
 if __name__ == '__main__':
-    cfg, _ = get_global_config()
-    EPRestApi(config=cfg)
+    EPRestApi(config=get_global_config())
     

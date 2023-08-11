@@ -3,6 +3,9 @@
 
 # Python
 **/__pycache__/
+*.pyc
+*.pyo
+**/*.egg-info/
 
 # Simulink
 **/slprj/

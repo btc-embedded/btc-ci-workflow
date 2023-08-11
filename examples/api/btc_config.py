@@ -5,6 +5,10 @@ import yaml
 
 
 def get_global_config():
+    config, _ = __get_global_config()
+    return config
+
+def __get_global_config():
     """Returns the global config from the parent dir of the
     file 'btc_config.py' with the project-specific config."""
     thisfile = os.path.abspath(__file__).replace('\\', '/')
@@ -38,7 +42,7 @@ def get_merged_config(project_directory=os.getcwd(), silent=False, project_confi
     - The configs are merged by giving precedence to any project-specific
     settings."""
     # get the global config
-    config, path = get_global_config()
+    config, path = __get_global_config()
     if config and not silent:
         print(f"Applying global config from {path}")
 
