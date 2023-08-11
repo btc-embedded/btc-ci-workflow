@@ -4,8 +4,8 @@ import sys
 import traceback
 
 import util
-from api.btc_config import get_merged_config, get_vector_gen_config
-from api.btc_rest_api import EPRestApi as EP
+from btc_config import get_merged_config, get_vector_gen_config
+from btc_rest_api import EPRestApi
 
 
 def run_btc_test(test_config):    
@@ -25,7 +25,7 @@ def btc_migration_source(test_config):
     test_config_abs = os.path.abspath(test_config)
     config = get_merged_config(project_config=test_config_abs)
     work_dir = os.path.dirname(test_config_abs)
-    ep = EP(config=config)
+    ep = EPRestApi(config=config)
     source_model = config['sourceModel'] if 'sourceModel' in config else config['modelFile']
     init_script = config['scriptFile'] if 'scriptFile' in config else None
     epp_file_source = os.path.join(work_dir, os.path.basename(source_model).replace('.slx', '_source.epp'))
@@ -117,7 +117,7 @@ def btc_migration_target(test_config, mil_executions, sil_executions):
     source_model = config['sourceModel'] if 'sourceModel' in config else config['modelFile']
     target_model = config['targetModel'] if 'targetModel' in config else config['modelFile']
     init_script = config['scriptFile'] if 'scriptFile' in config else None
-    ep = EP(config=config)
+    ep = EPRestApi(config=config)
     epp_file_target = os.path.join(work_dir, os.path.basename(target_model).replace('.slx', '_target.epp'))
 
     # Empty BTC EmbeddedPlatform profile (*.epp) + Arch Import

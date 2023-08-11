@@ -2,15 +2,15 @@ import os
 import sys
 
 import util
-from api.btc_config import get_merged_config
-from api.btc_rest_api import EPRestApi as EP
+from btc_config import get_merged_config
+from btc_rest_api import EPRestApi
 
 
 def run_btc_test(epp_file):
     # BTC EmbeddedPlatform API object
     work_dir = os.path.dirname(epp_file)
     config = get_merged_config(project_directory=work_dir)
-    ep = EP(config=config)
+    ep = EPRestApi(config=config)
 
     # Load a BTC EmbeddedPlatform profile (*.epp)
     ep.get_req('profiles/' + epp_file + '?discardCurrentProfile=true', message="Loading profile")

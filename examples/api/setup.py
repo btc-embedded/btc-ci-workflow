@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name='btc_rest_api',
@@ -7,8 +7,8 @@ setup(
     author='Thabo Krick',
     author_email='thabo.krick@btc-embedded.com',
     url='https://github.com/btc-embedded/btc-ci-workflow/examples/api',
-    packages=find_packages(),  # Automatically discover and include all packages
-    install_requires=['requests'],
+    packages=find_packages(),
+    install_requires=[ 'requests', 'pyyaml' ],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',

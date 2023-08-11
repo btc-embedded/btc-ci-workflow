@@ -1,2 +1,2 @@
-requests
-pyyaml
+# install local package incl. its dependencies
+-e examples/api

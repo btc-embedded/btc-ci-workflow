@@ -15,3 +15,5 @@
 
 # MacOS
 .DS_Store
+
+logs/current.log

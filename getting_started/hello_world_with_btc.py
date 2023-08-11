@@ -1,4 +1,5 @@
 import os
+
 from btc_rest_api import EPRestApi
 
 ep = EPRestApi()

@@ -2,24 +2,28 @@ import os
 import sys
 
 import util
-from api.btc_config import get_merged_config
-from api.btc_rest_api import EPRestApi as EP
+from btc_config import get_merged_config
+from btc_rest_api import EPRestApi
 
 
 def run_btc_test(epp_file):
     # BTC EmbeddedPlatform API object
     work_dir = os.path.dirname(epp_file)
     config = get_merged_config(project_directory=work_dir)
-    ep = EP(config=config)
+    ep = EPRestApi(config=config, port=1337)
 
     # Load a BTC EmbeddedPlatform profile (*.epp)
-    ep.get_req(f"profiles/{epp_file}?discardCurrentProfile=true", message="Loading profile")
+    ep.get_req(f"profiles/{epp_file.replace('/', '%2F')}?discardCurrentProfile=true", message="Loading profile")
     
     # Applying preferences to use the correct compiler
-    util.set_compiler(ep, config)
+    try:
+        ep.put_req('preferences', [ { 'preferenceName' : 'GENERAL_COMPILER_SETTING', 'preferenceValue' : 'GCC (64bit)' } ])
+    except:
+        pass
 
     # Update architecture
-    # ep.put_req('architectures', message="Architecture Update...")
+    ep.put_req('profiles', { 'path': epp_file })
+    ep.put_req('architectures', message="Architecture Update...")
 
     # Execute requirements-based tests
     response = ep.get_req('scopes')
