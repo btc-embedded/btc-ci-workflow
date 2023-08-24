@@ -2,20 +2,36 @@ import datetime
 import os
 
 
-# results should be a list of entries with the fields:
-#   projectName, duration (seconds), statementCoverage, mcdcCoverage,
-#   testResult, eppPath, reportPath
+# 
+# ----------------------------- Main-function -----------------------------
+# 
 def create_test_report_summary(results, report_title='BTC Test Report Summary', report_name='BTCTestReportSummary.html'):
+    """
+    Takes a list of individual results and creates a summary report from it.
+    
+    The results objects are expected to contain the following fields:
+    - projectName
+    - duration (integer indicating the duration in seconds)
+    - statementCoverage
+    - mcdcCoverage
+    - testResult (PASSED / FAILED / ERROR / SKIPPED)
+    - eppPath (path to the *.epp file)
+    - reportPath (path to the project's html report)
+    """
+    # aggregate total_duration and overall_status
     total_duration = sum(project['duration'] for project in results)
     overall_status = "ERROR" if any(project["testResult"] == "ERROR" for project in results) else ("FAILED" if any(project["testResult"] == "FAILED" for project in results) else "PASSED")
 
+    # import html template
     with open('btc_summary_report.template') as f:
         html_template = f.read()
 
+    # prepare projects_string, containing info for all projects
     projects_string = ''
     for result in results:
         projects_string += get_project_string(result) + '\r\n'
 
+    # fill placeholders in template
     final_html = html_template.replace('__title__', report_title)\
                               .replace('__creator__', os.getenv('USERNAME') or os.getlogin())\
                               .replace('__timestamp__', datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))\
@@ -27,27 +43,25 @@ def create_test_report_summary(results, report_title='BTC Test Report Summary', 
                               .replace('__numberOfProjectsFailed__', str(sum(1 for project in results if project["testResult"] == "FAILED")))\
                               .replace('__projects__', projects_string)
 
-    # Write the HTML to a file
+    # Write the final HTML file
     with open(report_name, "w") as f:
         f.write(final_html)
+
 
 #
 # ----------------------------- Sub-functions -----------------------------
 #
 
 def get_project_string(result):
-    """
-    - projectName      : can be eppName without extension
-    - testResult       : PASSED / FAILED / NO_VERDICT / ERROR
-    - statementCoverage
-    - mcdcCoverage
-    - reportPath       : path to project report.html
-    - eppPath          : path to project.epp
-    - eppName          : name of the project.epp (incl. extension) -> eppPath basename
-    - duration         : duration in the form hh:mm:ss
-    - statusIconClass  : icon-sdc (green), icon-wdc (yellow/orange), icon-edc (red)
-    - statusMessage    : message on mouseOver of the status icon
-    """
+    # we need to replace the following placeholders:
+    # - projectName      : can be eppName without extension
+    # - testResult       : PASSED / FAILED / NO_VERDICT / ERROR
+    # - statementCoverage
+    # - mcdcCoverage
+    # - reportPath       : path to project report.html
+    # - eppPath          : path to project.epp
+    # - eppName          : name of the project.epp (incl. extension) -> eppPath basename
+    # - duration         : duration in the form hh:mm:ss
     template = '<tr><td><span class="{statusIconClass}" title="{statusMessage}"> </span></td><td><a href="{reportPath}">{projectName}</a></td><td>{statementCoverage}% Statement, {mcdcCoverage}% MC/DC</td><td><a href="{eppPath}">{eppName}</a></td><td>{duration}</td><td><div class="result_container"><div class="{testResult}"/><b>{testResult}</b></div></td></tr>'
     # Fill in the HTML template with the data
     project_html_entry = template.format(
@@ -66,7 +80,7 @@ def get_project_string(result):
 
 
 def seconds_to_hms(seconds):
-    """converts from 42343 (seconds) to 11:45:43 (hh:mm:ss)"""
+    """Converts a seconds value (like 42343) into an hh:mm:ss value (like 11:45:43)"""
     hours = seconds // 3600
     minutes = (seconds % 3600) // 60
     seconds = seconds % 60
