@@ -26,7 +26,7 @@ def run_btc_test(epp_file):
         ep.put_req('preferences', preferences)
 
     # Update architecture (incl. code generation via TL)
-    ep.put_req('architectures')
+    ep.put_req('architectures', message='Updating architecture')
 
     # Execute requirements-based tests on MIL and SIL
     response = ep.get_req('scopes')
