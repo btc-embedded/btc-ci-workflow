@@ -75,7 +75,7 @@ class EPRestApi:
             if message: print(message)
         response = requests.get(self._url(urlappendix.replace('\\', '/').replace(' ', '%20')))
         if not response.ok:
-            raise Exception(f"Error during request POST {urlappendix}: {response.status_code}: {response.content}")
+            raise Exception(f"Error during request GET {urlappendix}: {response.status_code}: {response.content}")
         return self.check_long_running(response)
     
     # Performs a delete request on the given url extension
@@ -83,7 +83,7 @@ class EPRestApi:
         if message: print(message)
         response = requests.delete(self._url(urlappendix.replace('\\', '/').replace(' ', '%20')))
         if not response.ok:
-            raise Exception(f"Error during request POST {urlappendix}: {response.status_code}: {response.content}")
+            raise Exception(f"Error during request DELETE {urlappendix}: {response.status_code}: {response.content}")
         return self.check_long_running(response)
 
     # Performs a post request on the given url extension. The optional requestBody contains the information necessary for the request
@@ -107,7 +107,7 @@ class EPRestApi:
         else:
             response = requests.put(self._url(url),json=requestBody)
         if not response.ok:
-            raise Exception(f"Error during request POST {url}: {response}")
+            raise Exception(f"Error during request PUT {url}: {response}")
         return self.check_long_running(response)
 
     # Checks if the REST Server is available
