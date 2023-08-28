@@ -19,6 +19,8 @@ echo.
 :: local auxilary vars
 SET appdata_location=%APPDATA%/BTC/ep/%EP_VERSION%/%PORT%
 
+start "" http://localhost:%PORT%
+
 call "%INSTALL_DIR%/ep%EP_VERSION%/rcp/ep.exe" ^
 -clearPersistedState ^
 -application ep.application.headless ^
