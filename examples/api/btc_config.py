@@ -35,7 +35,7 @@ def get_project_specific_config(project_directory=os.getcwd(), project_config=No
 def get_merged_config(project_directory=os.getcwd(), silent=False, project_config=None):
     """Returns a merged config that combines the global config from the
     parent dir of the file 'btc_config.py' with a project-specific config.
-    - The project-specific config is the first file called 'btc_config.yaml'
+    - The project-specific config is the first file called 'btc_project_config.yml'
     that is found when recursively searching the specified project directory.
     If no project directory is specified, the current working directory is
     used.

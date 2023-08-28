@@ -15,10 +15,7 @@ def run_btc_test(epp_file):
     # Load a BTC EmbeddedPlatform profile (*.epp)
     ep.get_req(f"profiles/{epp_file}?discardCurrentProfile=true", message="Loading profile")
     
-    # Applying preferences to use the correct compiler
-    util.set_compiler(ep, config)
-
-    # Applying preferences to use the correct Matlab version & compiler
+   # Applying preferences to use the correct Matlab version & compiler
     preferences = []
     if config['matlabVersion']:
         preferences.append( { 'preferenceName': 'GENERAL_MATLAB_VERSION', 'preferenceValue': 'CUSTOM' } )
@@ -29,7 +26,7 @@ def run_btc_test(epp_file):
         ep.put_req('preferences', preferences)
 
     # Update architecture (incl. code generation via TL)
-    # ep.put_req('architectures')
+    ep.put_req('architectures')
 
     # Execute requirements-based tests on MIL and SIL
     response = ep.get_req('scopes')
@@ -67,5 +64,7 @@ def run_btc_test(epp_file):
     print('Finished with workflow.')
 
 
+# Allows the script to be called directly
+# (e.g., "python.exe test_workflow.py some_folder/my_project.epp")
 if __name__ == '__main__':
     run_btc_test(sys.argv[1])
