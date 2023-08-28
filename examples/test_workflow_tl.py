@@ -26,6 +26,8 @@ def run_btc_test(epp_file):
         ep.put_req('preferences', preferences)
 
     # Update architecture (incl. code generation via TL)
+    # (arch-update fails when profile is dirty: EP-2752 -> saving it, to be on the safe side)
+    ep.put_req('profiles', { 'path': epp_file })
     ep.put_req('architectures', message='Updating architecture')
 
     # Execute requirements-based tests on MIL and SIL
