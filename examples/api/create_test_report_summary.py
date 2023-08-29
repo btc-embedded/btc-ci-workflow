@@ -1,6 +1,8 @@
 import datetime
 import os
 
+thisfile = os.path.abspath(__file__).replace('\\', '/')
+BTC_SUMMARY_REPORT_TEMPLATE = os.path.join(os.path.dirname(thisfile), 'btc_summary_report.template')
 
 # 
 # ----------------------------- Main-function -----------------------------
@@ -23,7 +25,7 @@ def create_test_report_summary(results, report_title='BTC Test Report Summary', 
     overall_status = "ERROR" if any(project["testResult"] == "ERROR" for project in results) else ("FAILED" if any(project["testResult"] == "FAILED" for project in results) else "PASSED")
 
     # import html template
-    with open('btc_summary_report.template') as f:
+    with open(BTC_SUMMARY_REPORT_TEMPLATE) as f:
         html_template = f.read()
 
     # prepare projects_string, containing info for all projects
@@ -67,8 +69,8 @@ def get_project_string(result):
     project_html_entry = template.format(
         projectName = result["projectName"],
         testResult = result["testResult"],
-        statementCoverage = result["statementCoverage"],
-        mcdcCoverage = result["mcdcCoverage"],
+        statementCoverage = f'{result["statementCoverage"]:.2f}',
+        mcdcCoverage = f'{result["mcdcCoverage"]:.2f}',
         reportPath = result["reportPath"],
         eppPath = result["eppPath"],
         eppName = os.path.basename(result["eppPath"]),
