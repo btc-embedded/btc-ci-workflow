@@ -3,13 +3,8 @@ import platform
 import subprocess
 import time
 
+import requests
 from btc_config import get_global_config
-
-try:
-    import requests
-except Exception:
-    print("Please run 'pip install requests' in terminal to install necessary dependencies.")
-    exit(1)
 
 
 class EPRestApi:
@@ -70,6 +65,8 @@ class EPRestApi:
 
     # Performs a get request on the given url extension
     def get_req(self, urlappendix, message=None):
+        """Returns an http response object. If the POST method is expected to return an object,
+        it's usually accessed by calling response.json()"""
         if not 'progress' in urlappendix:
             # print this unless it's a progress query (to avoid flooding the console)
             if message: print(message)
@@ -88,6 +85,8 @@ class EPRestApi:
 
     # Performs a post request on the given url extension. The optional requestBody contains the information necessary for the request
     def post_req(self, urlappendix, requestBody=None, message=None):
+        """Returns an http response object. If the POST method is expected to return an object,
+        it's usually accessed by calling response.json()['result']"""
         url = urlappendix.replace('\\', '/').replace(' ', '%20')
         if message: print(message)
         if requestBody == None:
@@ -118,9 +117,9 @@ class EPRestApi:
             return False
         return response.ok
 
-    # URL appender
+    # it's not important if the path starts with /, ep/ or directly with a resource
     def _url(self, path):
-        return f"{self._HOST_}:{self._PORT_}/ep/{path.lstrip('/')}"
+        return f"{self._HOST_}:{self._PORT_}/ep/{path.lstrip('/').lstrip('ep/')}"
 
     # This method is used to poll a request until the progress is done.
     def check_long_running(self, response):
@@ -139,6 +138,7 @@ class EPRestApi:
         return self.get_req('/progress?progress-id=' + jobID)
 
 
+# if called directly, starts EP based on the global config
 if __name__ == '__main__':
     EPRestApi(config=get_global_config())
     
