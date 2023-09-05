@@ -4,6 +4,7 @@ import subprocess
 import time
 
 import requests
+
 from btc_config import get_global_config
 
 
@@ -119,7 +120,7 @@ class EPRestApi:
 
     # it's not important if the path starts with /, ep/ or directly with a resource
     def _url(self, path):
-        return f"{self._HOST_}:{self._PORT_}/ep/{path.lstrip('/').lstrip('ep/')}"
+        return f"{self._HOST_}:{self._PORT_}/ep/{path.lstrip('/')}"
 
     # This method is used to poll a request until the progress is done.
     def check_long_running(self, response):

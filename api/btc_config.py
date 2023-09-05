@@ -56,11 +56,14 @@ def get_merged_config(project_directory=os.getcwd(), silent=False, project_confi
     return config
 
 
-def get_vector_gen_config(scope_uid, config):
+def get_vector_gen_config(scope_uid, config=None):
     """Returns the vector generation payload object for the specified uid and config object.
+    If no config object is specified, the global config is used.
     - All relevant properties of the config are applied.
     - Anything not specified in the config is left empty (the API uses default value in those cases)"""
     vector_generation_config = { 'scopeUid' : scope_uid }
+    if not config:
+        config = get_global_config()
     # engine settings
     engine_settings = {}
     if config['globalTimeout']: engine_settings['timeoutSeconds'] = config['globalTimeout']
