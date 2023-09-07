@@ -5,28 +5,8 @@
 # - the project-specific config has precedence in case of conflicts
 # ------------------------------------------------------------------
 
-# Basic settings: could be component-specific
-pllString: STM; MCDC
-threshold: 100      # at what percentage value should the vector generation stop?
-globalTimeout: 300  # in seconds
-engines:            # Allowed: ATG, CV or both
-- ATG
-- CV
-
-# Advanced settings
-atgTimeoutSeconds: 60
-cvTimeoutSeconds: 300
-cvPropertyTimeoutSeconds: 15
-cvSearchDepth: 10
-maximumNumberOfThreads: 4    # Not more than 4 are allowed on a 4-core machine
-parallelExecutionMode: GOALS # Allowed: GOALS, BALANCED, ENGINES
-maximumNumberOfMatlabs: 1
-loopUnrollLimit: 10
-modelCheckers:      # Allowed: SMIBMC, VIS, AUTOFXP, CBMC, ISAT
-- ISAT
-
 # General settings
-matlabVersion: MATLAB R2022b (64-bit)
+matlabVersion: MATLAB R2018b (64-bit)
 compiler: MinGW64 (64bit)
 installationRoot: C:/Program Files/BTC
-epVersion: 23.2p0
+epVersion: 2.11p1

@@ -2,11 +2,11 @@ from setuptools import find_packages, setup
 
 setup(
     name='btc_rest_api',
-    version='23.2.0',
-    description='API wrapper for BTC EmbeddedPlatform 23.2p0 REST API',
+    version='2.11.1',
+    description='API wrapper for BTC EmbeddedPlatform 2.11p1 REST API',
     author='Thabo Krick',
     author_email='thabo.krick@btc-embedded.com',
-    url='https://github.com/btc-embedded/btc-ci-workflow/examples/api',
+    url='https://github.com/btc-embedded/btc-ci-workflow/api',
     packages=find_packages(),
     install_requires=[ 'requests', 'pyyaml' ],
     classifiers=[

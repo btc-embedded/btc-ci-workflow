@@ -26,7 +26,7 @@ def print_b2b_results(response, coverage_response=None):
     r = response.json()['result']
     errors = f", Error: {r['error']}" if r['error'] else ""
     print("Back-to-Back Test Results:")
-    print(f"- [{r['referenceMode']} vs. {r['comparisonMode']}] Result: {r['verdictStatus']} " +
+    print(f"- [{r['refMode']} vs. {r['compMode']}] Result: {r['verdictStatus']} " +
           f"(Total: {r['total']}, Passed: {r['passed']}, Accepted: {r['failedAccepted']}, Failed: {r['failed']}{errors})")
     if coverage_response:
         coverage = coverage_response.json()['MCDCPropertyCoverage']
