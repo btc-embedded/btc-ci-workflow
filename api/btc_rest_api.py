@@ -136,7 +136,7 @@ class EPRestApi:
         return response
 
     def poll_long_running(self, jobID):
-        return self.get_req('/progress?progress-id=' + jobID)
+        return self.get_req('/progress/' + jobID)
 
 
 # if called directly, starts EP based on the global config
