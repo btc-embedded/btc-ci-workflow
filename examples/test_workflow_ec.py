@@ -3,7 +3,7 @@ import sys
 from urllib.parse import quote
 
 import util
-from btc_config import get_merged_config, get_vector_gen_config
+from btc_config import get_merged_config
 from btc_rest_api import EPRestApi
 
 
@@ -54,19 +54,17 @@ def run_btc_test(epp_file):
     util.print_rbt_results(response, rbt_coverage)
 
     # automatic test generation
-    vector_gen_config = get_vector_gen_config(toplevel_scope_uid, config)
+    # automatic test generation, different approach in EP<=22.2: GET config and apply config to POST
+    # http://localhost:1337/ep/documentation/index.html#get-/ep/coverage-generation
+    # newer versions assume the default for everything, unless it's explicitly overwritten
+    vector_gen_config = ep.get_req('coverage-generation').json()
+    vector_gen_config['pllString'] = 'MCDC'
     ep.post_req('coverage-generation', vector_gen_config, message="Generating vectors")
     b2b_coverage = ep.get_req(f"scopes/{toplevel_scope_uid}/coverage-results-b2b?goal-types=MCDC")
 
     # B2B TL MIL vs. SIL
     response = ep.post_req(f"scopes/{toplevel_scope_uid}/b2b", { 'refMode': 'SL MIL', 'compMode': 'SIL' }, message="Executing B2B test")
     util.print_b2b_results(response, b2b_coverage)
-
-    # Create project report
-    response = ep.post_req(f"scopes/{toplevel_scope_uid}/project-report", message="Creating test report")
-    report = response.json()['result']
-    # export project report to a file called 'report.html'
-    ep.post_req(f"reports/{report['uid']}", { 'exportPath': work_dir, 'newName': 'report' })
 
     # Save *.epp
     ep.put_req('profiles', { 'path': epp_file }, message="Saving profile")
