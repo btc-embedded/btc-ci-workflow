@@ -9,7 +9,6 @@ This repo contains four example workflows that demonstrate how unit tests with B
 - [Component Files](examples/EmbeddedCoderAutosar_SHC)
 - [Workflow Script](examples/test_workflow_ec.py)
 
-![test_ec](https://github.com/thabok/btc-ci-workflow/actions/workflows/test_ec.yml/badge.svg)
 
 ## Example 2
 - Testing for a TargetLink Model: _Adaptive Cruise Control_
@@ -18,7 +17,6 @@ This repo contains four example workflows that demonstrate how unit tests with B
 - [Component Files](examples/TargetLink_ACC)
 - [Workflow Script](examples/test_workflow_tl.py)
 
-![test_ec](https://github.com/thabok/btc-ci-workflow/actions/workflows/test_tl.yml/badge.svg)
 
 ## Example 3
 - Testing for a Simulink Model: _Power Window Controller_
@@ -26,16 +24,12 @@ This repo contains four example workflows that demonstrate how unit tests with B
 - [Component Files](examples/CCode_SPA)
 - [Workflow Script](examples/test_workflow_c.py)
 
-![test_ec](https://github.com/thabok/btc-ci-workflow/actions/workflows/test_sl.yml/badge.svg)
-
 
 ## Example 4
 - Testing for handwritten C-Code: _Sum Product Average Calculator_
 - Software-in-the-loop (SIL)
 - [Component Files](examples/Simulink_PWC)
 - [Workflow Script](examples/test_workflow_sl.py)
-
-![test_ec](https://github.com/thabok/btc-ci-workflow/actions/workflows/test_ccode.yml/badge.svg)
 
 
 # Repository Structure
