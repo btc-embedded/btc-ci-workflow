@@ -33,7 +33,7 @@ def print_b2b_results(response, coverage_response=None):
         print(f"  Coverage: {coverage['handledPercentage']}% MC/DC")
 
 
-def set_compiler(ep, config):
+def set_compiler(ep, config=None):
     """Sets the configured compiler"""
     try:
         if platform.system() == 'Windows':

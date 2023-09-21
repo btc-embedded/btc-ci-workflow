@@ -4,14 +4,23 @@ import subprocess
 import time
 
 import requests
-
 from btc_config import get_global_config
 
 
 class EPRestApi:
     #Starter for the EP executable
-    def __init__(self, host='http://localhost', port=1337, version=None, install_location=None, lic='', config=None):
-        if not (host and port and version and install_location) and not config:
+    def __init__(self, host='http://localhost', port=1337, version=None, install_location=None, lic='', config=None, use_docker=False):
+        """
+        Wrapper for the BTC EmbeddedPlatform REST API
+        - when created without arguments, it uses the default install location & version defined in the global config (btc_config.yml)
+
+        On Mac and Linux operating systems, the tool start is not handled by the wrapper.
+        Instead, it tries to connect to a running instance at the specified port.
+        You can call something like
+           'docker run -p 1337:8080 -v "/my/workdir:/my/workdir" btces/ep'
+        to run the BTC EmbeddedPlatform docker image.
+        """
+        if not (port and version and install_location) and not config:
             config = get_global_config()
         if config and config['installationRoot'] and config['epVersion']:
             version = config['epVersion']
@@ -42,7 +51,10 @@ class EPRestApi:
                     ' -Dep.rest.port=' + self._PORT_
                 subprocess.Popen(args, stdout=open(os.devnull, 'wb'), stderr=subprocess.STDOUT)
                 self.actively_started = True
-        else: return
+        else:
+            print(f'Connected to BTC EmbeddedPlatform REST API at {host}:{port}')
+            return
+        print(f'Connecting to BTC EmbeddedPlatform REST API at {host}:{port}')
         while not self.is_rest_service_available():
             time.sleep(2)
             print('.', end='')
@@ -63,6 +75,43 @@ class EPRestApi:
                 #self.close_application()
             except:
                 pass
+
+    # wrapper directly returns the relevant object if possible
+    def get(self, urlappendix, message=None):
+        """Returns the result object, or the response, if no result object is available."""
+        response = self.get_req(urlappendix, message)
+        return self.extract_result(response)
+    
+    # wrapper directly returns the relevant object if possible
+    def post(self, urlappendix, requestBody=None, message=None):
+        """Returns the result object, or the response, if no result object is available."""
+        response = self.post_req(urlappendix, requestBody, message)
+        return self.extract_result(response)
+    
+    # wrapper directly returns the relevant object if possible
+    def put(self, urlappendix, requestBody=None, message=None):
+        """Returns the result object, or the response, if no result object is available."""
+        response = self.put_req(urlappendix, requestBody, message)
+        return self.extract_result(response)
+
+    # wrapper directly returns the relevant object if possible
+    def delete(self, urlappendix, message=None):
+        """Performs a delete request and returns the response object"""
+        return self.delete_req(urlappendix, message)
+
+    # extracts the response object which can be nested in different ways
+    def extract_result(self, response):
+        """If the response object contains data, it is accessed via .json().
+        If this data has a result field (common for post requests), its content is returned, otherwise the data object itself.
+        If the response object has no data, the response iteslf is returned."""
+        try:
+            result = response.json()
+            if 'result' in result:
+                return result['result']
+            else:
+                return result
+        except Exception:
+            return response
 
     # Performs a get request on the given url extension
     def get_req(self, urlappendix, message=None):
