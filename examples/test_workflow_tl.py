@@ -13,7 +13,7 @@ def run_btc_test(epp_file):
     ep = EPRestApi(config=config)
 
     # Load a BTC EmbeddedPlatform profile (*.epp)
-    ep.get_req(f"profiles/{epp_file}?discardCurrentProfile=true", message="Loading profile")
+    ep.get(f"profiles/{epp_file}?discardCurrentProfile=true", message="Loading profile")
     
    # Applying preferences to use the correct Matlab version & compiler
     preferences = []
@@ -23,16 +23,15 @@ def run_btc_test(epp_file):
     if config['maximumNumberOfMatlabs']:
         preferences.append( { 'preferenceName' : 'SIMULATION_MIL_NUMBER_OF_MATLAB_INSTANCES', 'preferenceValue' : config['maximumNumberOfMatlabs'] } )
     if preferences:
-        ep.put_req('preferences', preferences)
+        ep.put('preferences', preferences)
 
     # Update architecture (incl. code generation via TL)
     # (arch-update fails when profile is dirty: EP-2752 -> saving it, to be on the safe side)
-    ep.put_req('profiles', { 'path': epp_file })
-    ep.put_req('architectures', message='Updating architecture')
+    ep.put('profiles', { 'path': epp_file })
+    ep.put('architectures', message='Updating architecture')
 
     # Execute requirements-based tests on MIL and SIL
-    response = ep.get_req('scopes')
-    scopes = response.json()
+    scopes = ep.get('scopes')
     scope_uids = [ scope['uid'] for scope in scopes if scope['architecture'] == 'TargetLink' ]
     toplevel_scope_uid = scope_uids[0]
     rbt_exec_payload = {
@@ -41,27 +40,26 @@ def run_btc_test(epp_file):
             'execConfigNames' : [ 'TL MIL', 'SIL' ]
         }
     }
-    response = ep.post_req('scopes/test-execution-rbt', rbt_exec_payload, message="Executing requirements-based tests")
-    rbt_coverage = ep.get_req(f"scopes/{toplevel_scope_uid}/coverage-results-rbt?goal-types=MCDC")
+    response = ep.post('scopes/test-execution-rbt', rbt_exec_payload, message="Executing requirements-based tests")
+    rbt_coverage = ep.get(f"scopes/{toplevel_scope_uid}/coverage-results-rbt?goal-types=MCDC")
     util.print_rbt_results(response, rbt_coverage)
 
     # automatic test generation
     vector_gen_config = get_vector_gen_config(toplevel_scope_uid, config)
-    ep.post_req('coverage-generation', vector_gen_config, message="Generating vectors")
-    b2b_coverage = ep.get_req(f"scopes/{toplevel_scope_uid}/coverage-results-b2b?goal-types=MCDC")
+    ep.post('coverage-generation', vector_gen_config, message="Generating vectors")
+    b2b_coverage = ep.get(f"scopes/{toplevel_scope_uid}/coverage-results-b2b?goal-types=MCDC")
 
     # B2B TL MIL vs. SIL
-    response = ep.post_req(f"scopes/{toplevel_scope_uid}/b2b", { 'refMode': 'TL MIL', 'compMode': 'SIL' }, message="Executing B2B test")
+    response = ep.post(f"scopes/{toplevel_scope_uid}/b2b", { 'refMode': 'TL MIL', 'compMode': 'SIL' }, message="Executing B2B test")
     util.print_b2b_results(response, b2b_coverage)
 
     # Create project report
-    response = ep.post_req(f"scopes/{toplevel_scope_uid}/project-report", message="Creating test report")
-    report = response.json()['result']
+    report = ep.post(f"scopes/{toplevel_scope_uid}/project-report", message="Creating test report")
     # export project report to a file called 'report.html'
-    ep.post_req(f"reports/{report['uid']}", { 'exportPath': work_dir, 'newName': 'report' })
+    ep.post(f"reports/{report['uid']}", { 'exportPath': work_dir, 'newName': 'report' })
 
     # Save *.epp
-    ep.put_req('profiles', { 'path': epp_file }, message="Saving profile")
+    ep.put('profiles', { 'path': epp_file }, message="Saving profile")
 
     print('Finished with workflow.')
 

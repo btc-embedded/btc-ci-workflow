@@ -3,9 +3,8 @@ import os
 import sys
 import traceback
 
-import util
-from btc_config import get_merged_config, get_vector_gen_config
-from btc_rest_api import EPRestApi
+from btc_embedded.api import EPRestApi
+from btc_embedded.config import get_merged_config, get_vector_gen_config
 
 
 def run_btc_test(test_config):    
@@ -31,15 +30,15 @@ def btc_migration_source(test_config):
     epp_file_source = os.path.join(work_dir, os.path.basename(source_model).replace('.slx', '_source.epp'))
 
     # Empty BTC EmbeddedPlatform profile (*.epp) + Arch Import
-    ep.post_req('profiles?discardCurrentProfile=true')
+    ep.post('profiles?discardCurrentProfile=true')
     # Applying preferences to use the correct compiler
-    util.set_compiler(ep, config)
+    ep.set_compiler(config)
     # Matlab
     payload = []
     if config['matlabVersion']:
         payload.append( { 'preferenceName': 'GENERAL_MATLAB_VERSION', 'preferenceValue': 'CUSTOM' } )
         payload.append( { 'preferenceName' : 'GENERAL_MATLAB_CUSTOM_VERSION', 'preferenceValue' : config['sourceMatlabVersion'] } )
-        ep.put_req('preferences', payload)
+        ep.put('preferences', payload)
 
     #
     # Wrapper
@@ -52,7 +51,7 @@ def btc_migration_source(test_config):
         if script_file:
             payload['ecInitScript'] = script_file
         # create wrapper
-        wrapper = ep.post_req('architectures/embedded-coder-wrapper-creation', payload, message="Wrapper Creation").json()['result']
+        wrapper = ep.post('architectures/embedded-coder-wrapper-creation', payload, message="Wrapper Creation")
         model_file = wrapper['ecModelFile']
         script_file = wrapper['ecInitScript']
 
@@ -62,9 +61,9 @@ def btc_migration_source(test_config):
     payload = {} 
     payload['ecModelFile'] = model_file
     payload['ecInitScript'] = script_file
-    ep.post_req('architectures/embedded-coder', payload, message="EC Architecture Import")
+    ep.post('architectures/embedded-coder', payload, message="EC Architecture Import")
 
-    scopes = ep.get_req('scopes').json()
+    scopes = ep.get('scopes')
     toplevel_scope_uid = next(scope['uid'] for scope in scopes if scope['architecture'] == 'Simulink')
     
 
@@ -73,11 +72,11 @@ def btc_migration_source(test_config):
     #
     if 'inputRestrictions' in config:
         payload = { 'filePath' : os.path.abspath(os.path.join(work_dir, config['inputRestrictions'])) }
-        ep.post_req('input-restrictions-import', payload)
+        ep.post('input-restrictions-import', payload)
     # automatic test generation
     vector_gen_config = get_vector_gen_config(toplevel_scope_uid, config)
-    ep.post_req('coverage-generation', vector_gen_config, message="Generating vectors")
-    b2b_coverage = ep.get_req(f"scopes/{toplevel_scope_uid}/coverage-results-b2b?goal-types=MCDC").json()
+    ep.post('coverage-generation', vector_gen_config, message="Generating vectors")
+    b2b_coverage = ep.get(f"scopes/{toplevel_scope_uid}/coverage-results-b2b?goal-types=MCDC")
     print('Coverage ' + str(b2b_coverage['MCDCPropertyCoverage']['handledPercentage']))
 
 
@@ -85,27 +84,27 @@ def btc_migration_source(test_config):
     # Simulation
     #
     payload = { 'execConfigNames' : [ 'SL MIL', 'SIL' ] }
-    ep.post_req(f"scopes/{toplevel_scope_uid}/testcase-simulation", payload, message="Simulating on MIL and SIL")
+    ep.post(f"scopes/{toplevel_scope_uid}/testcase-simulation", payload, message="Simulating on MIL and SIL")
 
     #
     # Execution Record Export
     #
-    all_execution_records = ep.get_req('execution-records').json()
+    all_execution_records = ep.get('execution-records')
 
     # MIL
     mil_execution_records_uids = [ er['uid'] for er in all_execution_records if er['executionConfig'] == 'SL MIL']
     mil_dir = os.path.abspath(os.path.join(work_dir, 'execution_records', 'MIL'))
     payload = { 'UIDs' : mil_execution_records_uids, 'exportDirectory': mil_dir, 'exportFormat' : 'MDF' }
-    ep.post_req('execution-records-export', payload)
+    ep.post('execution-records-export', payload)
 
     # SIL
     sil_execution_records_uids = [ er['uid'] for er in all_execution_records if er['executionConfig'] == 'SIL']
     sil_dir = os.path.abspath(os.path.join(work_dir, 'execution_records', 'SIL'))
     payload = { 'UIDs' : sil_execution_records_uids, 'exportDirectory': sil_dir, 'exportFormat' : 'MDF' }
-    ep.post_req('execution-records-export', payload)
+    ep.post('execution-records-export', payload)
 
     # Save *.epp
-    ep.put_req('profiles', { 'path': epp_file_source }, message="Saving profile")
+    ep.put('profiles', { 'path': epp_file_source }, message="Saving profile")
 
     execution_records_root_dir = os.path.dirname(mil_dir)
     return get_existing_references(execution_records_root_dir)
@@ -121,15 +120,15 @@ def btc_migration_target(test_config, mil_executions, sil_executions):
     epp_file_target = os.path.join(work_dir, os.path.basename(target_model).replace('.slx', '_target.epp'))
 
     # Empty BTC EmbeddedPlatform profile (*.epp) + Arch Import
-    ep.post_req('profiles?discardCurrentProfile=true')
+    ep.post('profiles?discardCurrentProfile=true')
     # Applying preferences to use the correct compiler
-    util.set_compiler(ep, config)
+    ep.set_compiler(config)
     # Matlab
     payload = []
     if config['matlabVersion']:
         payload.append( { 'preferenceName': 'GENERAL_MATLAB_VERSION', 'preferenceValue': 'CUSTOM' } )
         payload.append( { 'preferenceName' : 'GENERAL_MATLAB_CUSTOM_VERSION', 'preferenceValue' : config['targetMatlabVersion'] } )
-        ep.put_req('preferences', payload)
+        ep.put('preferences', payload)
 
     #
     # Wrapper
@@ -142,7 +141,7 @@ def btc_migration_target(test_config, mil_executions, sil_executions):
         if script_file:
             payload['ecInitScript'] = script_file
         # create wrapper
-        wrapper = ep.post_req('architectures/embedded-coder-wrapper-creation', payload, message="Wrapper Creation").json()['result']
+        wrapper = ep.post('architectures/embedded-coder-wrapper-creation', payload, message="Wrapper Creation")
         model_file = wrapper['ecModelFile']
         script_file = wrapper['ecInitScript']
 
@@ -152,9 +151,9 @@ def btc_migration_target(test_config, mil_executions, sil_executions):
     payload = {} 
     payload['ecModelFile'] = model_file
     payload['ecInitScript'] = script_file
-    ep.post_req('architectures/embedded-coder', payload, message="EC Architecture Import")
+    ep.post('architectures/embedded-coder', payload, message="EC Architecture Import")
 
-    scopes = ep.get_req('scopes').json()
+    scopes = ep.get('scopes')
     toplevel_scope_uid = next(scope['uid'] for scope in scopes if scope['architecture'] == 'Simulink')
     
     #
@@ -163,25 +162,25 @@ def btc_migration_target(test_config, mil_executions, sil_executions):
     # create required folders
     payload = { "folderKind": "EXECUTION_RECORD" }
     payload['folderName'] = 'old-mil'
-    old_mil_folder = ep.post_req('folders', payload).json()
+    old_mil_folder = ep.post('folders', payload)
     payload['folderName'] = 'new-mil'
-    new_mil_folder = ep.post_req('folders', payload).json()
+    new_mil_folder = ep.post('folders', payload)
     payload['folderName'] = 'old-sil'
-    old_sil_folder = ep.post_req('folders', payload).json()
+    old_sil_folder = ep.post('folders', payload)
     payload['folderName'] = 'new-sil'
-    new_sil_folder = ep.post_req('folders', payload).json()
+    new_sil_folder = ep.post('folders', payload)
     # import mil executions
     payload = {} 
     payload['paths'] = mil_executions
     payload['kind'] = 'SL MIL'
     payload['folderUID'] = old_mil_folder['uid']
-    ep.post_req('execution-records', payload)
+    ep.post('execution-records', payload)
     # import sil executions
     payload = {} 
     payload['paths'] = sil_executions
     payload['kind'] = 'SIL'
     payload['folderUID'] = old_sil_folder['uid']
-    ep.post_req('execution-records', payload)
+    ep.post('execution-records', payload)
     
     #
     # Regression Test
@@ -190,42 +189,42 @@ def btc_migration_target(test_config, mil_executions, sil_executions):
     payload = {}
     payload['compMode'] = 'SL MIL'
     payload['compFolderUID'] = new_mil_folder['uid']
-    mil_test = ep.post_req(f"folders/{old_mil_folder['uid']}/regression-tests", payload, message="MIL vs. MIL").json()['result']
+    mil_test = ep.post(f"folders/{old_mil_folder['uid']}/regression-tests", payload, message="MIL vs. MIL")
     # verdictStatus, failed, error, passed, total
     print(mil_test['verdictStatus'])
     # export ERs
-    new_records_mil = ep.get_req(f"folders/{new_mil_folder['uid']}/execution-records").json()
+    new_records_mil = ep.get(f"folders/{new_mil_folder['uid']}/execution-records")
     payload = {
         'UIDs' : [er['uid'] for er in new_records_mil],
         'exportDirectory' : os.path.abspath(os.path.join(work_dir, 'new_executions', 'MIL')),
         'exportFormat' : 'MDF'
     }
-    ep.post_req('execution-records-export', payload)
+    ep.post('execution-records-export', payload)
 
     # -> SIL
     payload = {}
     payload['compMode'] = 'SIL'
     payload['compFolderUID'] = new_sil_folder['uid']
-    sil_test = ep.post_req(f"folders/{old_sil_folder['uid']}/regression-tests", payload, message="SIL vs. SIL").json()['result']
+    sil_test = ep.post(f"folders/{old_sil_folder['uid']}/regression-tests", payload, message="SIL vs. SIL")
     # verdictStatus, failed, error, passed, total
     print(sil_test['verdictStatus'])
     # export ERs
-    new_records_sil = ep.get_req(f"folders/{new_sil_folder['uid']}/execution-records").json()
+    new_records_sil = ep.get(f"folders/{new_sil_folder['uid']}/execution-records")
     payload = {
         'UIDs' : [er['uid'] for er in new_records_sil],
         'exportDirectory' : os.path.abspath(os.path.join(work_dir, 'new_executions', 'SIL')),
         'exportFormat' : 'MDF'
     }
-    ep.post_req('execution-records-export', payload)
+    ep.post('execution-records-export', payload)
 
     # Create project report
-    response = ep.post_req(f"scopes/{toplevel_scope_uid}/project-report", message="Creating test report")
-    report = response.json()['result']
+    response = ep.post(f"scopes/{toplevel_scope_uid}/project-report", message="Creating test report")
+    report = response
     # export project report to a file called 'report.html'
-    ep.post_req(f"reports/{report['uid']}", { 'exportPath': work_dir, 'newName': 'report' })
+    ep.post(f"reports/{report['uid']}", { 'exportPath': work_dir, 'newName': 'report' })
 
     # Save *.epp
-    ep.put_req('profiles', { 'path': epp_file_target }, message="Saving profile")
+    ep.put('profiles', { 'path': epp_file_target }, message="Saving profile")
 
 def get_existing_references(execution_record_folder):
     mil_executions = [os.path.abspath(p) for p in glob.glob(f"{execution_record_folder}/MIL/*.mdf")]
@@ -235,7 +234,7 @@ def get_existing_references(execution_record_folder):
 def handle_error(ep, epp_file, step_result):
     step_result['status'] = 'ERROR'
     step_result['message'] = traceback.format_exc()
-    ep.put_req('profiles', { 'path': epp_file }, message="Saving profile")
+    ep.put('profiles', { 'path': epp_file }, message="Saving profile")
     print(step_result['message'])
 
 if __name__ == '__main__':

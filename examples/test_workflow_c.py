@@ -1,9 +1,9 @@
 import os
 import sys
 
-import util
-from btc_config import get_merged_config
-from btc_rest_api import EPRestApi
+from btc_embedded import util
+from btc_embedded.api import EPRestApi
+from btc_embedded.config import get_merged_config
 
 
 def run_btc_test(epp_file):
@@ -13,21 +13,17 @@ def run_btc_test(epp_file):
     ep = EPRestApi(config=config, port=1337)
 
     # Load a BTC EmbeddedPlatform profile (*.epp)
-    ep.get_req(f"profiles/{epp_file.replace('/', '%2F')}?discardCurrentProfile=true", message="Loading profile")
+    ep.get(f"profiles/{epp_file.replace('/', '%2F')}?discardCurrentProfile=true", message="Loading profile")
     
     # Applying preferences to use the correct compiler
-    try:
-        ep.put_req('preferences', [ { 'preferenceName' : 'GENERAL_COMPILER_SETTING', 'preferenceValue' : 'GCC (64bit)' } ])
-    except:
-        pass
+    ep.set_compiler(config)
 
     # Update architecture
-    ep.put_req('profiles', { 'path': epp_file })
-    ep.put_req('architectures', message="Architecture Update...")
+    ep.put('profiles', { 'path': epp_file })
+    ep.put('architectures', message="Architecture Update...")
 
     # Execute requirements-based tests
-    response = ep.get_req('scopes')
-    scopes = response.json()
+    scopes = ep.get('scopes')
     scope_uids = [scope['uid'] for scope in scopes if scope['architecture'] == 'C-Code']
     toplevel_scope_uid = scope_uids[0]
     rbt_exec_payload = {
@@ -36,18 +32,17 @@ def run_btc_test(epp_file):
             'execConfigNames' : [ 'SIL' ]
         }
     }
-    response = ep.post_req('scopes/test-execution-rbt', rbt_exec_payload, message="Executing requirements-based tests")
-    rbt_coverage = rbt_coverage = ep.get_req(f"scopes/{toplevel_scope_uid}/coverage-results-rbt?goal-types=MCDC")
+    response = ep.post('scopes/test-execution-rbt', rbt_exec_payload, message="Executing requirements-based tests")
+    rbt_coverage = rbt_coverage = ep.get(f"scopes/{toplevel_scope_uid}/coverage-results-rbt?goal-types=MCDC")
     util.print_rbt_results(response, rbt_coverage)
 
     # Create project report
-    response = ep.post_req(f"scopes/{toplevel_scope_uid}/project-report", message="Creating test report")
-    report = response.json()['result']
+    report = ep.post(f"scopes/{toplevel_scope_uid}/project-report", message="Creating test report")
     # export project report to a file called 'report.html'
-    ep.post_req(f"reports/{report['uid']}", { 'exportPath': work_dir, 'newName': 'report' })
+    ep.post(f"reports/{report['uid']}", { 'exportPath': work_dir, 'newName': 'report' })
 
     # Save *.epp
-    ep.put_req('profiles', { 'path': epp_file }, message="Saving profile")
+    ep.put('profiles', { 'path': epp_file }, message="Saving profile")
 
     print('Finished with workflow.')
 

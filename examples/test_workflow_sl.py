@@ -2,8 +2,8 @@ import os
 import sys
 
 import util
-from btc_config import get_merged_config
-from btc_rest_api import EPRestApi
+from btc_embedded.api import EPRestApi
+from btc_embedded.config import get_merged_config
 
 
 def run_btc_test(epp_file):
@@ -13,7 +13,7 @@ def run_btc_test(epp_file):
     ep = EPRestApi(config=config)
 
     # Load a BTC EmbeddedPlatform profile (*.epp)
-    ep.get_req('profiles/' + epp_file + '?discardCurrentProfile=true', message="Loading profile")
+    ep.get('profiles/' + epp_file + '?discardCurrentProfile=true', message="Loading profile")
 
     # Applying preferences to use the correct Matlab version & compiler
     preferences = []
@@ -23,13 +23,12 @@ def run_btc_test(epp_file):
     if config['maximumNumberOfMatlabs']:
         preferences.append( { 'preferenceName' : 'SIMULATION_MIL_NUMBER_OF_MATLAB_INSTANCES', 'preferenceValue' : config['maximumNumberOfMatlabs'] } )
     if preferences:
-        ep.put_req('preferences', preferences)
+        ep.put('preferences', preferences)
     # Update architecture (incl. code generation)
-    # ep.put_req('architectures')
+    # ep.put('architectures')
 
     # Execute requirements-based tests
-    response = ep.get_req('scopes')
-    scopes = response.json()
+    scopes = ep.get('scopes')
     scope_uids = [scope['uid'] for scope in scopes if scope['architecture'] == 'Simulink']
     toplevel_scope_uid = scope_uids[0]
     rbt_exec_payload = {
@@ -39,17 +38,16 @@ def run_btc_test(epp_file):
             'generateModelCoverageReport' : True
         }
     }
-    response = ep.post_req('scopes/test-execution-rbt', rbt_exec_payload, message="Executing requirements-based tests")
+    response = ep.post('scopes/test-execution-rbt', rbt_exec_payload, message="Executing requirements-based tests")
     util.print_rbt_results(response)
 
     # Create project report
-    response = ep.post_req(f"scopes/{toplevel_scope_uid}/project-report", message="Creating test report")
-    report = response.json()['result']
+    report = ep.post(f"scopes/{toplevel_scope_uid}/project-report", message="Creating test report")
     # export project report to a file called 'report.html'
-    ep.post_req(f"reports/{report['uid']}", { 'exportPath': work_dir, 'newName': 'report' })
+    ep.post(f"reports/{report['uid']}", { 'exportPath': work_dir, 'newName': 'report' })
 
     # Save *.epp
-    ep.put_req('profiles', { 'path': epp_file }, message="Saving profile")
+    ep.put('profiles', { 'path': epp_file }, message="Saving profile")
 
     print('Finished with workflow.')
 
