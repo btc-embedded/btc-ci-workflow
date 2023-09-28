@@ -1,2 +1,2 @@
-# install local package incl. its dependencies
--e api
+# install btc_embedded module incl. its dependencies
+btc_embedded
