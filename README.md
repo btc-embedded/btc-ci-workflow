@@ -2,6 +2,22 @@
 
 This repo contains four example workflows that demonstrate how unit tests with BTC EmbeddedPlatform can be automated using Python scripts and the BTC EmbeddedPlatform Rest API.
 
+## Installing the package
+```sh
+$ pip install btc_embedded
+```
+
+## Using the API wrapper
+```python
+from btc_embedded import EPRestApi
+
+# create api object and connects to the default port (1337)
+ep = EPRestApi()
+
+# create an empty test project
+ep.post('profiles')
+```
+
 ## Example 1
 - Testing for a Simulink EmbeddedCoder Autosar Model: _Seat Heating Controller_
 - Model-in-the-loop (MIL)
@@ -38,9 +54,7 @@ Let's have a quick look at the structure of this repository:
 ## Examples
 - 4 example components (see previous section above for more details)
 - 4 workflow scripts (one for each example)
-- **api**: BTC Rest API Wrapper for Python, used by the workflow scripts
 - **run.py**: example showing how to invoke one of the workflow scripts manually
-- **util.py**: simple utility functions used by the workflow scripts
 
 ## Pipeline scripts for various environments
 - The folder **.github/workflows/** contains four yaml files, each configuring a GitHub Actions workflow for one of the examples, using Python and the BTC EmbeddedPlatform REST API
