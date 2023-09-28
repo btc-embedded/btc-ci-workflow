@@ -1,15 +1,15 @@
 import os
 import sys
 
-import util
-from btc_config import get_merged_config, get_vector_gen_config
-from btc_rest_api import EPRestApi
+from btc_embedded import (EPRestApi, get_merged_config, get_vector_gen_config,
+                          util)
 
 
 def run_btc_test(epp_file):
-    # BTC EmbeddedPlatform API object
+    epp_file = os.path.abspath(epp_file)
     work_dir = os.path.dirname(epp_file)
     config = get_merged_config(project_directory=work_dir)
+    # BTC EmbeddedPlatform API object
     ep = EPRestApi(config=config)
 
     # Load a BTC EmbeddedPlatform profile (*.epp)

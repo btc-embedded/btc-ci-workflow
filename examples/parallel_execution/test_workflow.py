@@ -2,9 +2,7 @@ import os
 import sys
 from datetime import datetime
 
-import util
-from btc_embedded.api import EPRestApi
-from btc_embedded.config import get_merged_config
+from btc_embedded import EPRestApi, get_merged_config, util
 
 
 def run_btc_test(epp_file, port):

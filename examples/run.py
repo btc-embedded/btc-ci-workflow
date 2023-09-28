@@ -1,6 +1,6 @@
 import os
 
-from test_workflow_ec import run_btc_test
+from test_workflow_c import run_btc_test
 
 ###########################################
 #
@@ -9,4 +9,4 @@ from test_workflow_ec import run_btc_test
 #
 ###########################################
 
-run_btc_test(epp_file = os.getcwd() + '/examples/EmbeddedCoderAutosar_SHC/shc_ec_ar.epp')
+run_btc_test('examples/CCode_SPA/spa_c.epp')

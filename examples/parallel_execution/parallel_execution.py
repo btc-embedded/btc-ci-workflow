@@ -10,8 +10,7 @@ from glob import glob
 from multiprocessing import Manager
 
 import docker
-from create_test_report_summary import create_test_report_summary
-
+from btc_embedded import create_test_report_summary
 from test_workflow import run_btc_test
 
 CLIENT          = docker.from_env()          # client to interact with docker

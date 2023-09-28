@@ -2,15 +2,15 @@ import os
 import sys
 from urllib.parse import quote
 
-import util
-from btc_embedded.api import EPRestApi
-from btc_embedded.config import get_merged_config, get_vector_gen_config
+from btc_embedded import (EPRestApi, get_merged_config, get_vector_gen_config,
+                          util)
 
 
 def run_btc_test(epp_file):
-    # BTC EmbeddedPlatform API object
+    epp_file = os.path.abspath(epp_file)
     work_dir = os.path.dirname(epp_file)
     config = get_merged_config(project_directory=work_dir)
+    # BTC EmbeddedPlatform API object
     ep = EPRestApi(config=config)
 
     # Load a BTC EmbeddedPlatform profile (*.epp)
@@ -31,8 +31,8 @@ def run_btc_test(epp_file):
 
     # Update architecture (incl. code generation)
     payload = {
-        "slModelFile": "/Users/thabok/Documents/GitHub/btc-ci-workflow/examples/EmbeddedCoderAutosar_SHC/model/Wrapper_SeatHeatControl.slx",
-        "slInitScript": "/Users/thabok/Documents/GitHub/btc-ci-workflow/examples/EmbeddedCoderAutosar_SHC/model/init_Wrapper_SeatHeatControl.m",
+        "slModelFile": os.path.join(work_dir, "model/Wrapper_SeatHeatControl.slx"),
+        "slInitScript": os.path.join(work_dir, "model/init_Wrapper_SeatHeatControl.m"),
     }
     ep.put('architectures/model-paths', payload) # workaround for http://jira.osc.local:8080/browse/EP-3183
     ep.put('profiles', { 'path': epp_file }) # workaround for http://jira.osc.local:8080/browse/EP-2752

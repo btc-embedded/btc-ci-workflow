@@ -3,8 +3,7 @@ import os
 import sys
 import traceback
 
-from btc_embedded.api import EPRestApi
-from btc_embedded.config import get_merged_config, get_vector_gen_config
+from btc_embedded import EPRestApi, get_merged_config, get_vector_gen_config
 
 
 def run_btc_test(test_config):    
