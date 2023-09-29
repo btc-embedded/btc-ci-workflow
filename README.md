@@ -9,7 +9,7 @@ $ pip install btc_embedded
 
 ## Using the API wrapper
 ```python
-from btc_embedded.api import EPRestApi
+from btc_embedded import EPRestApi
 
 # create api object and connects to the default port (1337)
 ep = EPRestApi()
