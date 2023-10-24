@@ -11,12 +11,13 @@ from multiprocessing import Manager
 
 import docker
 from btc_embedded import create_test_report_summary
+
 from test_workflow import run_btc_test
 
 CLIENT          = docker.from_env()          # client to interact with docker
 IMAGE_NAME      = 'btces/ep'                 # official btc embeddedplatform image on dockerhub
-LICENSE_SERVER  = '27000@my.license.server'  # replace with valid license server address
-NO_WORKERS      = 3                          # Number of tests to run in parallel
+LICENSE_SERVER  = '27000@srvbtces01.btc-es.local'  # replace with valid license server address
+NO_WORKERS      = 2                          # Number of tests to run in parallel
 
 def test_all_the_things(entrypoint=None):
     """
@@ -60,7 +61,7 @@ def run_workflow(epp_file_abspath, port_queue):
     port = port_queue.get_nowait()
     # spin up docker container
     print(f'Starting container at port {port}')
-    container = run_container(IMAGE_NAME, work_dir, port, { 'LICENSE': LICENSE_SERVER })
+    container = run_container(IMAGE_NAME, work_dir, port, { 'LICENSE_LOCATION': LICENSE_SERVER })
     
     # run test workflow
     result = run_btc_test(epp_file_abspath, port)
@@ -83,6 +84,7 @@ def run_container(image_name, work_dir=None, port=None, env=None):
     """
     # Define configuration
     if work_dir: volumes = { f"{work_dir}": { 'bind': f"{work_dir}", 'mode': 'rw' } }
+    if not env == None: env['LICENSE_PACKAGES'] = 'ET_COMPLETE'
     if port: ports = { 8080 : port } # { container_port : host_port }
     # Create and start the container
     container = CLIENT.containers.run(

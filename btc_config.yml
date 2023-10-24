@@ -1,0 +1,43 @@
+# ------------------------------------------------------------------
+# Global config file for BTC EmbeddedPlatform CI workflow
+# - set environment variable BTC_API_CONFIG_FILE to point to this YAML file
+# - this config is merged with a project-specific config (if present)
+# - the project-specific config has precedence in case of conflicts
+#
+# - if BTC_API_CONFIG_FILE is not set:
+#   - a default config from the pip package btc_embedded is used
+#   - https://github.com/btc-embedded/btc_embedded/blob/main/btc_embedded/btc_config.yml
+#
+# If you want to also apply a project-specific config:
+#
+# from btc_embedded import get_merged_config
+# test_config_abs_path = os.path.abspath('project_specific_config.yml')
+# merged_config = get_merged_config(project_config=test_config_abs_path)
+#
+# ------------------------------------------------------------------
+
+# Basic settings: could be component-specific
+pllString: MCDC;CA;DZ         # semi-colon separated. Good practice: don't select all goals
+globalTimeout: 300            # in seconds (300s -> 5min)
+engines:                      # Allowed: ATG, CV or both
+- ATG
+- CV
+
+# Advanced settings
+atgTimeoutSeconds: 60
+cvTimeoutSeconds: 300
+cvPropertyTimeoutSeconds: 15
+cvSearchDepth: 10
+maximumNumberOfThreads: 4     # Not more than 4 are allowed on a 4-core machine
+parallelExecutionMode: GOALS  # Allowed: GOALS, BALANCED, ENGINES
+maximumNumberOfMatlabs: 1
+loopUnrollLimit: 10
+modelCheckers:                # Allowed: SMIBMC, VIS, AUTOFXP, CBMC, ISAT
+- ISAT
+- CBMC
+
+# General settings
+matlabVersion: MATLAB R2022b (64-bit)
+compiler: MinGW64 (64bit)
+installationRoot: C:/Program Files/BTC
+epVersion: 23.2p0
