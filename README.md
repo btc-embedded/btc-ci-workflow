@@ -6,6 +6,12 @@ This repo contains four example workflows that demonstrate how unit tests with B
 ```sh
 $ pip install btc_embedded
 ```
+What can I do if my machine doesn't allow pip access to the internet?
+- Check with colleagues / the IT team if your company hosts a mirror of the public repository in your local network and use that instead.
+- Plan B:
+    - download / clone the module's public repository: https://github.com/btc-embedded/btc_embedded
+    - open a terminal and navigate into the btc_embedded directory
+    - call **pip install .** (including the dot)
 
 ## Using the API wrapper
 ```python
