@@ -1,3 +1,4 @@
+% Init script for AUTOSAR wrapper model: Wrapper_seat_heating_control
 init;
 
 

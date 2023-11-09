@@ -115,5 +115,5 @@ TemperatureRanges_TemperatureStage3.DisplayFormat = '';
 RTE_OK = 0;
 
 try
-    SeatHeatControl_defineIntEnumTypes
+    seat_heating_control_defineIntEnumTypes
 end
