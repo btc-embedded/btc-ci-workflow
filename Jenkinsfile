@@ -27,7 +27,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 // Run the python script to invoke tests
-                bat "python examples/test_workflow_ec.py \"${WORKSPACE}/examples/TargetLink_ACC/acc_tl.epp\""
+                bat "python examples/test_workflow_ec.py \"${WORKSPACE}/examples/EmbeddedCoderAutosar_SHC/shc_ec_ar.epp\""
             }
         }
 
@@ -35,7 +35,7 @@ pipeline {
             steps {
                 // Publish the HTML report
                 publishHTML([
-                    reportDir: 'examples/TargetLink_ACC',
+                    reportDir: 'examples/EmbeddedCoderAutosar_SHC',
                     reportFiles: 'report.html',
                     reportName: 'BTC Test Report'
                 ])
