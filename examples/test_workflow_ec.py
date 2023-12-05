@@ -18,25 +18,15 @@ def run_btc_test(epp_file):
 
     # Matlab
     preferences = [ {'preferenceName':'EC_ARCHITECTURE_UPDATE_CODE_META_SOURCE','preferenceValue':'MODEL_ANALYSIS'},
-                    {'preferenceName':'EC_ARCHITECTURE_UPDATE_MAPPING_SOURCE','preferenceValue':'MODEL_ANALYSIS'}]
-    if config['matlabVersion']:
-        preferences.append( { 'preferenceName': 'GENERAL_MATLAB_VERSION', 'preferenceValue': 'CUSTOM' } )
-        preferences.append( { 'preferenceName' : 'GENERAL_MATLAB_CUSTOM_VERSION', 'preferenceValue' : config['matlabVersion'] } )
-    if config['maximumNumberOfMatlabs']:
-        preferences.append( { 'preferenceName' : 'SIMULATION_MIL_NUMBER_OF_MATLAB_INSTANCES', 'preferenceValue' : config['maximumNumberOfMatlabs'] } )
+                    {'preferenceName':'EC_ARCHITECTURE_UPDATE_MAPPING_SOURCE','preferenceValue':'PROFILE'}]
     ep.put('preferences', preferences)
 
     # Applying preferences to use the correct compiler
     ep.set_compiler(config)
 
     # Update architecture (incl. code generation)
-    payload = {
-        "slModelFile": os.path.join(work_dir, "model/Wrapper_SeatHeatControl.slx"),
-        "slInitScript": os.path.join(work_dir, "model/init_Wrapper_SeatHeatControl.m"),
-    }
-    ep.put('architectures/model-paths', payload) # workaround for http://jira.osc.local:8080/browse/EP-3183
     ep.put('profiles', { 'path': epp_file }) # workaround for http://jira.osc.local:8080/browse/EP-2752
-    ep.put('architectures', message="Architecture Update")
+    ep.put('architectures', message="Updating Architecture")
 
     # Execute requirements-based tests
     scopes = ep.get('scopes')
@@ -53,8 +43,7 @@ def run_btc_test(epp_file):
     util.print_rbt_results(response, rbt_coverage)
 
     # automatic test generation
-    vector_gen_config = get_vector_gen_config(toplevel_scope_uid, config)
-    ep.post('coverage-generation', vector_gen_config, message="Generating vectors")
+    ep.post('coverage-generation', { 'scopeUid' : toplevel_scope_uid }, message="Generating vectors")
     b2b_coverage = ep.get(f"scopes/{toplevel_scope_uid}/coverage-results-b2b?goal-types=MCDC")
 
     # B2B TL MIL vs. SIL
