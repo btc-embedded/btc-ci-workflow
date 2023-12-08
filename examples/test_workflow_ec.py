@@ -2,8 +2,7 @@ import os
 import sys
 from urllib.parse import quote
 
-from btc_embedded import (EPRestApi, get_merged_config, get_vector_gen_config,
-                          util)
+from btc_embedded import EPRestApi, get_merged_config, util
 
 
 def run_btc_test(epp_file):
@@ -14,15 +13,12 @@ def run_btc_test(epp_file):
     ep = EPRestApi(config=config)
 
     # Load a BTC EmbeddedPlatform profile (*.epp)
-    ep.get('profiles/' + quote(epp_file, safe="") + '?discardCurrentProfile=true', message="Loading profile")
+    ep.get(f'profiles/{epp_file}?discardCurrentProfile=true', message="Loading profile")
 
     # Matlab
     preferences = [ {'preferenceName':'EC_ARCHITECTURE_UPDATE_CODE_META_SOURCE','preferenceValue':'MODEL_ANALYSIS'},
                     {'preferenceName':'EC_ARCHITECTURE_UPDATE_MAPPING_SOURCE','preferenceValue':'PROFILE'}]
     ep.put('preferences', preferences)
-
-    # Applying preferences to use the correct compiler
-    ep.set_compiler(config)
 
     # Update architecture (incl. code generation)
     ep.put('profiles', { 'path': epp_file }) # workaround for http://jira.osc.local:8080/browse/EP-2752

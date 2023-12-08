@@ -16,28 +16,42 @@
 #
 # ------------------------------------------------------------------
 
-# Basic settings: could be component-specific
-pllString: MCDC;CA;DZ         # semi-colon separated. Good practice: don't select all goals
-globalTimeout: 300            # in seconds (300s -> 5min)
-engines:                      # Allowed: ATG, CV or both
-- ATG
-- CV
-
-# Advanced settings
-atgTimeoutSeconds: 60
-cvTimeoutSeconds: 300
-cvPropertyTimeoutSeconds: 15
-cvSearchDepth: 10
-maximumNumberOfThreads: 4     # Not more than 4 are allowed on a 4-core machine
-parallelExecutionMode: GOALS  # Allowed: GOALS, BALANCED, ENGINES
-maximumNumberOfMatlabs: 1
-loopUnrollLimit: 10
-modelCheckers:                # Allowed: SMIBMC, VIS, AUTOFXP, CBMC, ISAT
-- ISAT
-- CBMC
-
 # General settings
-matlabVersion: MATLAB R2022b (64-bit)
-compiler: MinGW64 (64bit)
 installationRoot: C:/Program Files/BTC
-epVersion: 23.2p0
+epVersion: 23.3p0
+
+# Preferences: key-value pairs according to
+# documentation/User Guide/BTC EmbeddedPlatform Preference Configuration Guide.pdf
+# - any relative paths will be resolved to the parent directory of the file
+#   indicated by the environment variable BTC_API_CONFIG_FILE
+# - the existance of the env var is mandatory for using relative path.
+preferences:
+  GENERAL_MATLAB_CUSTOM_VERSION: MATLAB R2022b (64-bit)
+  GENERAL_COMPILER_SETTING: MinGW64 (64bit)
+  REQUIREMENT_BEHAVIOR_ONLY_IN_LEAVES: true
+  SIMULATION_MIL_NUMBER_OF_MATLAB_INSTANCES: 1
+  REPORT_TEMPLATE_FOLDER: report_templates
+  # vector generation settings
+  SV_GEN_HEURISTIC: ATG+CV
+  SV_GEN_CV_PARALLEL_ENGINE_MODE: BALANCED
+  SV_GEN_CV_ENGINES: SMIBMC:0,VIS:0,AUTOFXP:0,CBMC:1,ISAT:1
+  SV_GEN_ATG_TIMEOUT_SCOPE: 15                              # atg-timeout per scope
+  SV_GEN_CV_TIMEOUT_PROPERTY: 20                            # cv-timeout per property
+  SV_GEN_GLOBAL_TIMEOUT: 180                                # global timeout
+  SV_GEN_HIERARCHICALLY: false                              # only generate on entrypoint function
+  # settings for EmbeddedCoder Architecture Update
+  EC_ARCHITECTURE_UPDATE_CODE_META_SOURCE: MODEL_ANALYSIS
+  EC_ARCHITECTURE_UPDATE_MAPPING_SOURCE: PROFILE
+  
+# Additionally, you can specify arbitrary key-value pairs to use them in your scripts
+# The goal is to separate any configuration from the code, so you can adapt your
+# configuration without changing your code.
+# 
+# Example definition:
+# myFavouriteReportName: awesome-test-report
+# 
+# Example usage:
+# config = get_global_config()
+# ...
+# print("Creating report " + config['myFavouriteReportName']) 
+# ep.post(f"reports/{report['uid']}", { 'exportPath': work_dir, 'newName': config['myFavouriteReportName'] })

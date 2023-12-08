@@ -1,22 +1,18 @@
 import os
 import sys
 
-from btc_embedded import EPRestApi, get_merged_config, util
+from btc_embedded import EPRestApi, util
 
 
 def run_btc_test(epp_file):
     epp_file = os.path.abspath(epp_file)
     work_dir = os.path.dirname(epp_file)
-    config = get_merged_config(project_directory=work_dir)
     # BTC EmbeddedPlatform API object
-    ep = EPRestApi(config=config)
+    ep = EPRestApi()
 
     # Load a BTC EmbeddedPlatform profile (*.epp)
-    ep.get(f"profiles/{epp_file.replace('/', '%2F')}?discardCurrentProfile=true", message="Loading profile")
+    ep.get(f"profiles/{epp_file}?discardCurrentProfile=true", message="Loading profile")
     
-    # Applying preferences to use the correct compiler
-    ep.set_compiler(config)
-
     # Update architecture
     ep.put('profiles', { 'path': epp_file })
     ep.put('architectures', message="Architecture Update...")

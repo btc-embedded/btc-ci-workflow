@@ -1,30 +1,20 @@
 import os
 import sys
 
-from btc_embedded import EPRestApi, get_merged_config, util
+from btc_embedded import EPRestApi, util
 
 
 def run_btc_test(epp_file):
     epp_file = os.path.abspath(epp_file)
     work_dir = os.path.dirname(epp_file)
-    config = get_merged_config(project_directory=work_dir)
     # BTC EmbeddedPlatform API object
-    ep = EPRestApi(config=config)
+    ep = EPRestApi()
 
     # Load a BTC EmbeddedPlatform profile (*.epp)
     ep.get('profiles/' + epp_file + '?discardCurrentProfile=true', message="Loading profile")
 
-    # Applying preferences to use the correct Matlab version & compiler
-    preferences = []
-    if config['matlabVersion']:
-        preferences.append( { 'preferenceName': 'GENERAL_MATLAB_VERSION', 'preferenceValue': 'CUSTOM' } )
-        preferences.append( { 'preferenceName' : 'GENERAL_MATLAB_CUSTOM_VERSION', 'preferenceValue' : config['matlabVersion'] } )
-    if config['maximumNumberOfMatlabs']:
-        preferences.append( { 'preferenceName' : 'SIMULATION_MIL_NUMBER_OF_MATLAB_INSTANCES', 'preferenceValue' : config['maximumNumberOfMatlabs'] } )
-    if preferences:
-        ep.put('preferences', preferences)
     # Update architecture (incl. code generation)
-    # ep.put('architectures')
+    ep.put('architectures')
 
     # Execute requirements-based tests
     scopes = ep.get('scopes')

@@ -1,4 +1,4 @@
-from test_workflow_ec import run_btc_test
+from test_workflow_c import run_btc_test
 
 ###########################################
 #
@@ -7,4 +7,7 @@ from test_workflow_ec import run_btc_test
 #
 ###########################################
 
-run_btc_test('examples/EmbeddedCoderAutosar_SHC/shc_ec_ar.epp')
+run_btc_test('examples/CCode_SPA/spa_c.epp')
+# run_btc_test('examples/Simulink_PWC/pwc_sl.epp')
+# run_btc_test('examples/TargetLink_ACC/acc_tl.epp')
+# run_btc_test('examples/EmbeddedCoderAutosar_SHC/shc_ec_ar.epp')

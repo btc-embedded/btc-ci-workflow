@@ -15,16 +15,6 @@ def run_btc_test(epp_file):
     # Load a BTC EmbeddedPlatform profile (*.epp)
     ep.get(f"profiles/{epp_file}?discardCurrentProfile=true", message="Loading profile")
     
-   # Applying preferences to use the correct Matlab version & compiler
-    preferences = []
-    if config['matlabVersion']:
-        preferences.append( { 'preferenceName': 'GENERAL_MATLAB_VERSION', 'preferenceValue': 'CUSTOM' } )
-        preferences.append( { 'preferenceName' : 'GENERAL_MATLAB_CUSTOM_VERSION', 'preferenceValue' : config['matlabVersion'] } )
-    if config['maximumNumberOfMatlabs']:
-        preferences.append( { 'preferenceName' : 'SIMULATION_MIL_NUMBER_OF_MATLAB_INSTANCES', 'preferenceValue' : config['maximumNumberOfMatlabs'] } )
-    if preferences:
-        ep.put('preferences', preferences)
-
     # Update architecture (incl. code generation via TL)
     # (arch-update fails when profile is dirty: EP-2752 -> saving it, to be on the safe side)
     ep.put('profiles', { 'path': epp_file })
