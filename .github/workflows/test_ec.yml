@@ -25,7 +25,7 @@ jobs:
         shell: cmd
 
       - name: Run test workflow
-        run:  python examples/test_workflow_ec.py "${{github.workspace}}/examples/EmbeddedCoderAutosar_SHC/shc_ec_ar.epp"
+        run:  python -u examples/test_workflow_ec.py "${{github.workspace}}/examples/EmbeddedCoderAutosar_SHC/shc_ec_ar.epp"
         
       - name: Archive test results
         uses: actions/upload-artifact@v3

@@ -18,7 +18,7 @@
 
 # General settings
 installationRoot: C:/Program Files/BTC
-epVersion: 23.3p0
+epVersion: 24.1p0
 
 # Preferences: key-value pairs according to
 # documentation/User Guide/BTC EmbeddedPlatform Preference Configuration Guide.pdf
@@ -26,7 +26,7 @@ epVersion: 23.3p0
 #   indicated by the environment variable BTC_API_CONFIG_FILE
 # - the existance of the env var is mandatory for using relative path.
 preferences:
-  GENERAL_MATLAB_CUSTOM_VERSION: MATLAB R2022b (64-bit)
+  GENERAL_MATLAB_CUSTOM_VERSION: MATLAB R2023b (64-bit)
   GENERAL_COMPILER_SETTING: MinGW64 (64bit)
   REQUIREMENT_BEHAVIOR_ONLY_IN_LEAVES: true
   SIMULATION_MIL_NUMBER_OF_MATLAB_INSTANCES: 1

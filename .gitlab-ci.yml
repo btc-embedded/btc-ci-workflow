@@ -26,7 +26,7 @@ test:
   stage: test
   script:
     - cd myrepo
-    - python examples/test_workflow_tl.py examples/TargetLink_ACC/acc_tl.epp
+    - python -u examples/test_workflow_tl.py examples/TargetLink_ACC/acc_tl.epp
 
 publish:
   stage: publish

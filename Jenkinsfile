@@ -27,7 +27,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 // Run the python script to invoke tests
-                bat "python examples/test_workflow_ec.py \"${WORKSPACE}/examples/EmbeddedCoderAutosar_SHC/shc_ec_ar.epp\""
+                bat "python -u examples/test_workflow_ec.py \"${WORKSPACE}/examples/EmbeddedCoderAutosar_SHC/shc_ec_ar.epp\""
             }
         }
 

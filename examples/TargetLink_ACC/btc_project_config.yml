@@ -8,4 +8,7 @@
 # globalTimeout: 600  # in seconds
 engines:            # Allowed: ATG, CV or both
 - ATG
-atgTimeoutSeconds: 30
+
+preferences:
+  SV_GEN_HEURISTIC: ATG
+  SV_GEN_ATG_TIMEOUT_SCOPE: 30
