@@ -31,13 +31,12 @@ def run_btc_test(epp_file):
         }
     }
     response = ep.post('scopes/test-execution-rbt', rbt_exec_payload, message="Executing requirements-based tests")
-    rbt_coverage = ep.get(f"scopes/{toplevel_scope_uid}/coverage-results-rbt?goal-types=MCDC")
+    rbt_coverage = ep.get(f"scopes/{toplevel_scope_uid}/coverage-results-rbt")
     util.print_rbt_results(response, rbt_coverage)
 
     # automatic test generation
-    vector_gen_config = get_vector_gen_config(toplevel_scope_uid, config)
-    ep.post('coverage-generation', vector_gen_config, message="Generating vectors")
-    b2b_coverage = ep.get(f"scopes/{toplevel_scope_uid}/coverage-results-b2b?goal-types=MCDC")
+    ep.post('coverage-generation', { 'scopeUid' : toplevel_scope_uid, 'pllString' : 'MCDC' }, message="Generating vectors")
+    b2b_coverage = ep.get(f"scopes/{toplevel_scope_uid}/coverage-results-b2b")
 
     # B2B TL MIL vs. SIL
     response = ep.post(f"scopes/{toplevel_scope_uid}/b2b", { 'refMode': 'TL MIL', 'compMode': 'SIL' }, message="Executing B2B test")
