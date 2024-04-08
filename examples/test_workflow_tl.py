@@ -1,8 +1,7 @@
 import os
 import sys
 
-from btc_embedded import (EPRestApi, get_merged_config, get_vector_gen_config,
-                          util)
+from btc_embedded import EPRestApi, get_merged_config, util
 
 
 def run_btc_test(epp_file):
