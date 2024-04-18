@@ -27,7 +27,7 @@ epVersion: 24.1p0
 # - the existance of the env var is mandatory for using relative path.
 preferences:
   GENERAL_MATLAB_CUSTOM_VERSION: MATLAB R2023b (64-bit)
-  GENERAL_COMPILER_SETTING: MinGW64 (64bit)
+  GENERAL_COMPILER_SETTING: (Internal) MinGW64 (64bit)
   REQUIREMENT_BEHAVIOR_ONLY_IN_LEAVES: true
   SIMULATION_MIL_NUMBER_OF_MATLAB_INSTANCES: 1
   REPORT_TEMPLATE_FOLDER: report_templates
