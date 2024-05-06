@@ -10,16 +10,13 @@ def run_btc_test(epp_file):
     # BTC EmbeddedPlatform API object
     ep = EPRestApi()
 
-    # Load a BTC EmbeddedPlatform profile (*.epp)
-    ep.get(f"profiles/{epp_file}?discardCurrentProfile=true", message="Loading profile")
-    
-    # Update architecture
-    ep.put('profiles', { 'path': epp_file })
-    ep.put('architectures', message="Architecture Update...")
+    # Load a BTC EmbeddedPlatform profile (*.epp) and update it
+    ep.get(f"profiles/{epp_file}?discardCurrentProfile=true", message="Loading test project")
+    ep.put('architectures', message="Updating")
 
     # Execute requirements-based tests
     scopes = ep.get('scopes')
-    scope_uids = [scope['uid'] for scope in scopes if scope['architecture'] == 'C-Code']
+    scope_uids = [scope['uid'] for scope in scopes]
     toplevel_scope_uid = scope_uids[0]
     rbt_exec_payload = {
         'UIDs': scope_uids,
@@ -27,7 +24,7 @@ def run_btc_test(epp_file):
             'execConfigNames' : [ 'SIL' ]
         }
     }
-    response = ep.post('scopes/test-execution-rbt', rbt_exec_payload, message="Executing requirements-based tests")
+    response = ep.post('scopes/test-execution-rbt', rbt_exec_payload, message="Running requirements-based tests")
     rbt_coverage = rbt_coverage = ep.get(f"scopes/{toplevel_scope_uid}/coverage-results-rbt?goal-types=MCDC")
     util.print_rbt_results(response, rbt_coverage)
 
@@ -37,7 +34,7 @@ def run_btc_test(epp_file):
     ep.post(f"reports/{report['uid']}", { 'exportPath': work_dir, 'newName': 'report' })
 
     # Save *.epp
-    ep.put('profiles', { 'path': epp_file }, message="Saving profile")
+    ep.put('profiles', { 'path': epp_file }, message="Saving test project")
 
     print('Finished with workflow.')
 

@@ -12,21 +12,13 @@ def run_btc_test(epp_file):
     # BTC EmbeddedPlatform API object
     ep = EPRestApi(config=config)
 
-    # Load a BTC EmbeddedPlatform profile (*.epp)
-    ep.get(f'profiles/{epp_file}?discardCurrentProfile=true', message="Loading profile")
-
-    # Matlab
-    preferences = [ {'preferenceName':'EC_ARCHITECTURE_UPDATE_CODE_META_SOURCE','preferenceValue':'MODEL_ANALYSIS'},
-                    {'preferenceName':'EC_ARCHITECTURE_UPDATE_MAPPING_SOURCE','preferenceValue':'PROFILE'}]
-    ep.put('preferences', preferences)
-
-    # Update architecture (incl. code generation)
-    ep.put('profiles', { 'path': epp_file }) # workaround for http://jira.osc.local:8080/browse/EP-2752
-    ep.put('architectures', message="Updating Architecture")
+    # Load a BTC EmbeddedPlatform profile (*.epp) and update it
+    ep.get(f'profiles/{epp_file}?discardCurrentProfile=true', message="Loading test project")
+    ep.put('architectures', message="Updating test project")
 
     # Execute requirements-based tests
     scopes = ep.get('scopes')
-    scope_uids = [scope['uid'] for scope in scopes if scope['architecture'] == 'Simulink']
+    scope_uids = [scope['uid'] for scope in scopes]
     toplevel_scope_uid = scope_uids[0]
     rbt_exec_payload = {
         'UIDs': scope_uids,
@@ -52,7 +44,7 @@ def run_btc_test(epp_file):
     ep.post(f"reports/{report['uid']}", { 'exportPath': work_dir, 'newName': 'report' })
 
     # Save *.epp
-    ep.put('profiles', { 'path': epp_file }, message="Saving profile")
+    ep.put('profiles', { 'path': epp_file }, message="Saving test project")
 
     print('Finished with workflow.')
 

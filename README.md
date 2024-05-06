@@ -25,6 +25,25 @@ ep.post('profiles')
 
 # ...
 ```
+
+## Configuration
+All sorts of configurations (such as the BTC version or Matlab version to use, compiler, preferences for vector generation, etc.) can be done directly via the API using the preferences endpoint. However, we consider it best practice to separate configuration from the actual test workflow. This can be achieved as follows:
+
+- the file [btc_config.yml](btc_config.yml) shows the default api configuration for BTC EmbeddedPlatform workflows
+- a copy of this file can be adapted to your needs and provided as a global configuration set, by defining an environment variable **BTC_API_CONFIG_FILE** that points to this file (on Windows systems, we recommend to place it in "C:/ProgramData/BTC/ep/btc_config.yml")
+- **Optional: project-specific configurations**
+    - if you'd like to configure things differently for certain projects, you can add a project-specific configuration
+    - Simply place a copy of the **btc_config.yml** file alongside project source files to provide project-specific configurations
+    - project-specific configurations can override selected options defined in the global configuration, to allow adaptable configuration for projects with special needs
+    - Check out the [TargetLink workflow script](examples/test_workflow_tl.py) for an example on how to use the configuration (line 11)
+
+## Documentation
+The example workflows (subfolder: examples) are a great place to get started, but at some point you'll need access to the docs to know the specifics for some API commands. - The PDF version of the docs is available as part of this repo (e.g. EPRestApiDocs_xx.x.pdf) 
+- Assuming you have the application installed and have access to the required license, you can also run it and access a live-documentation in the browser:
+```bash
+python -c "from btc_embedded import EPRestApi; ep = EPRestApi();exit()"
+```
+
 ## Examples
 ### Example 1: EmbeddedCoder AUTOSAR model
 - Testing for a Simulink EmbeddedCoder Autosar Model: _Seat Heating Controller_
@@ -59,13 +78,6 @@ ep.post('profiles')
 ## Repository Structure
 Let's have a quick look at the structure of this repository:
 
-### Configuration
-- the file [btc_config.yml](btc_config.yml) shows the default api configuration for BTC EmbeddedPlatform workflows
-- a copy of this file can be adapted to your needs and provided as a global configuration set, by defining an environment variable **BTC_API_CONFIG_FILE** that points to this file
-- the same file can be versioned alongside project source files to provide project-specific configurations
-- project-specific configurations can override selected options defined in the global configuration, to allow adaptable configuration for projects with special needs
-- Check out the [TargetLink workflow script](examples/test_workflow_tl.py) for an example on how to use the configuration (line 11)
-
 ### Pipeline scripts for various environments
 - The folder **.github/workflows/** contains four yaml files, each configuring a GitHub Actions workflow for one of the examples, using Python and the BTC EmbeddedPlatform REST API
 - **Jenkinsfile** shows how to integrate a Python & REST-API-based BTC test workflow with Jenkins 
@@ -74,10 +86,9 @@ Let's have a quick look at the structure of this repository:
 ### Examples
 - 4 example components (see previous section above for more details)
 - 4 workflow scripts (one for each example)
-- **run.py**: example showing how to invoke one of the workflow scripts manually
+- **test_multiple_projects.py** showcases the test of multiple projects that yield a combined summary report
 
 ### Other files
-- **EPRestApiDocs_23.2.pdf**: PDF-version of the BTC EmbeddedPlatform Rest API documentation. Refer to this document if you want to extend/adapt the workflow scripts to know more about the different endpoints and parameters.
 - Do you want to make sure that no unwanted files sneak their way into your git repository and that binary files are treated as such?
     - The **.gitignore** and **.gitattributes** files can serve as a great entrypoint for model-based development projects.
     - **.gitignore** prevents untracked files and folders from being added, if they match one of the specified patterns

@@ -10,15 +10,13 @@ def run_btc_test(epp_file):
     # BTC EmbeddedPlatform API object
     ep = EPRestApi()
 
-    # Load a BTC EmbeddedPlatform profile (*.epp)
+    # Load a BTC EmbeddedPlatform profile (*.epp) and update it
     ep.get('profiles/' + epp_file + '?discardCurrentProfile=true', message="Loading profile")
-
-    # Update architecture (incl. code generation)
     ep.put('architectures')
 
     # Execute requirements-based tests
     scopes = ep.get('scopes')
-    scope_uids = [scope['uid'] for scope in scopes if scope['architecture'] == 'Simulink']
+    scope_uids = [scope['uid'] for scope in scopes]
     toplevel_scope_uid = scope_uids[0]
     rbt_exec_payload = {
         'UIDs': scope_uids,

@@ -11,17 +11,13 @@ def run_btc_test(epp_file):
     # BTC EmbeddedPlatform API object
     ep = EPRestApi(config=config)
 
-    # Load a BTC EmbeddedPlatform profile (*.epp)
+    # Load a BTC EmbeddedPlatform profile (*.epp) and update it (incl. code generation via TL)
     ep.get(f"profiles/{epp_file}?discardCurrentProfile=true", message="Loading profile")
-    
-    # Update architecture (incl. code generation via TL)
-    # (arch-update fails when profile is dirty: EP-2752 -> saving it, to be on the safe side)
-    ep.put('profiles', { 'path': epp_file })
     ep.put('architectures', message='Updating architecture')
 
     # Execute requirements-based tests on MIL and SIL
     scopes = ep.get('scopes')
-    scope_uids = [ scope['uid'] for scope in scopes if scope['architecture'] == 'TargetLink' ]
+    scope_uids = [ scope['uid'] for scope in scopes]
     toplevel_scope_uid = scope_uids[0]
     rbt_exec_payload = {
         'UIDs': scope_uids,
