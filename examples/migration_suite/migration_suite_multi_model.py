@@ -24,4 +24,4 @@ new_models = [{
 } for slx in glob.glob(f'multi/{new_ml}/*.slx')]
 
 # Perform migration test vs. reference behavior
-results = migration_suite_target(new_models, new_ml, model_results=results, accept_interface_changes=True)
+results = migration_suite_target(new_models, new_ml, model_results=results)
