@@ -6,12 +6,11 @@ from btc_embedded import EPRestApi, get_merged_config, util
 
 
 def run_btc_test(epp_file):
+    # BTC EmbeddedPlatform API object
+    ep = EPRestApi()
     epp_file = os.path.abspath(epp_file)
     work_dir = os.path.dirname(epp_file)
-    config = get_merged_config(project_directory=work_dir)
-    # BTC EmbeddedPlatform API object
-    ep = EPRestApi(config=config)
-
+    
     # Load a BTC EmbeddedPlatform profile (*.epp) and update it
     ep.get(f'profiles/{epp_file}?discardCurrentProfile=true', message="Loading test project")
     ep.put('architectures', message="Updating test project")
