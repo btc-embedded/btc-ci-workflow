@@ -2,7 +2,7 @@ import os
 import sys
 from urllib.parse import quote
 
-from btc_embedded import EPRestApi, get_merged_config, util
+from btc_embedded import EPRestApi, util
 
 
 def run_btc_test(epp_file):
