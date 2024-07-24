@@ -1,0 +1,38 @@
+{
+  "version":"1.1",
+  "metaData":{
+    "name":"tc1",
+    "scopePath":"a_smaller_b/Subsystem/a_smaller_b",
+    "architecture":"adt_compValGfx",
+    "length":"2"
+  },
+  "vectorContent":{
+    "steps":[ {
+      "step":{
+        "number":"0",
+        "inputs":[ {
+          "a":"1"
+        } ],
+        "outputs":[ {
+          "a_smaller_b":"0"
+        } ]
+      }
+    }, {
+      "step":{
+        "number":"1",
+        "inputs":[ {
+          "a":"0"
+        }, {
+          "b":"1"
+        } ],
+        "outputs":[ {
+          "a_smaller_b":"1"
+        } ]
+      }
+    } ]
+  },
+  "interface":{
+    "inputs":[ "a", "b" ],
+    "outputs":[ "a_smaller_b" ]
+  }
+}
