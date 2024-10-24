@@ -64,15 +64,15 @@ python -c "from btc_embedded import EPRestApi; ep = EPRestApi();exit()"
 ### Example 3: Simulink model - MIL only
 - Testing for a Simulink Model: _Power Window Controller_
 - Model-in-the-loop (MIL)
-- [Component Files](examples/CCode_SPA)
-- [Workflow Script](examples/test_workflow_c.py)
+- [Component Files](examples/Simulink_PWC)
+- [Workflow Script](examples/test_workflow_sl.py)
 
 
 ### Example 4: Handwritten C-Code
 - Testing for handwritten C-Code: _Sum Product Average Calculator_
 - Software-in-the-loop (SIL)
-- [Component Files](examples/Simulink_PWC)
-- [Workflow Script](examples/test_workflow_sl.py)
+- [Component Files](examples/CCode_SPA)
+- [Workflow Script](examples/test_workflow_c.py)
 
 
 ## Repository Structure
