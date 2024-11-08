@@ -26,12 +26,19 @@ def run_btc_test(epp_file):
         }
     }
     response = ep.post('scopes/test-execution-rbt', rbt_exec_payload, message="Executing requirements-based tests")
-    rbt_coverage = ep.get(f"scopes/{toplevel_scope_uid}/coverage-results-rbt?goal-types=MCDC")
+    rbt_coverage = ep.get(f"scopes/{toplevel_scope_uid}/coverage-results-rbt")
     util.print_rbt_results(response, rbt_coverage)
 
-    # automatic test generation
-    ep.post('coverage-generation', { 'scopeUid' : toplevel_scope_uid }, message="Generating vectors")
-    b2b_coverage = ep.get(f"scopes/{toplevel_scope_uid}/coverage-results-b2b?goal-types=MCDC")
+    # automatic test generation for MCDC with a timeout of 30 seconds
+    vector_gen_settings = {
+        'scopeUid'  : toplevel_scope_uid,
+        'pllString' : 'MCDC', 
+        'engineSettings' : {
+            'timeoutSeconds' : 30
+        }
+    }
+    ep.post('coverage-generation', vector_gen_settings, message="Generating vectors")
+    b2b_coverage = ep.get(f"scopes/{toplevel_scope_uid}/coverage-results-b2b")
 
     # B2B TL MIL vs. SIL
     response = ep.post(f"scopes/{toplevel_scope_uid}/b2b", { 'refMode': 'SL MIL', 'compMode': 'SIL' }, message="Executing B2B test")

@@ -1,24 +1,17 @@
 # ------------------------------------------------------------------
 # Global config file for BTC EmbeddedPlatform CI workflow
 # - set environment variable BTC_API_CONFIG_FILE to point to this YAML file
-# - this config is merged with a project-specific config (if present)
-# - the project-specific config has precedence in case of conflicts
 #
 # - if BTC_API_CONFIG_FILE is not set:
 #   - a default config from the pip package btc_embedded is used
 #   - https://github.com/btc-embedded/btc_embedded/blob/main/btc_embedded/btc_config.yml
 #
-# If you want to also apply a project-specific config:
-#
-# from btc_embedded import get_merged_config
-# test_config_abs_path = os.path.abspath('project_specific_config.yml')
-# merged_config = get_merged_config(project_config=test_config_abs_path)
-#
 # ------------------------------------------------------------------
 
-# General settings
+# General settings - will be considered when creating the api object: ep = EPRestApi()
 installationRoot: C:/Program Files/BTC
-epVersion: 24.1p0
+epVersion: 24.2p0
+#licenseLocation: 27000@10.18.2.1
 
 # Preferences: key-value pairs according to
 # documentation/User Guide/BTC EmbeddedPlatform Preference Configuration Guide.pdf
@@ -28,21 +21,44 @@ epVersion: 24.1p0
 preferences:
   GENERAL_MATLAB_CUSTOM_VERSION: MATLAB R2023b (64-bit)
   GENERAL_COMPILER_SETTING: (Internal) MinGW64 (64bit)
-  REQUIREMENT_BEHAVIOR_ONLY_IN_LEAVES: true
-  SIMULATION_MIL_NUMBER_OF_MATLAB_INSTANCES: 1
-  REPORT_TEMPLATE_FOLDER: report_templates
-  # vector generation settings
-  SV_GEN_HEURISTIC: ATG+CV
-  SV_GEN_CV_PARALLEL_ENGINE_MODE: BALANCED
-  SV_GEN_CV_ENGINES: SMIBMC:0,VIS:0,AUTOFXP:0,CBMC:1,ISAT:1
-  SV_GEN_ATG_TIMEOUT_SCOPE: 15                              # atg-timeout per scope
-  SV_GEN_CV_TIMEOUT_PROPERTY: 20                            # cv-timeout per property
-  SV_GEN_GLOBAL_TIMEOUT: 180                                # global timeout
-  SV_GEN_HIERARCHICALLY: false                              # only generate on entrypoint function
+  REPORT_TEMPLATE_FOLDER: report-templates
   # settings for EmbeddedCoder Architecture Update
   EC_ARCHITECTURE_UPDATE_CODE_META_SOURCE: MODEL_ANALYSIS
   EC_ARCHITECTURE_UPDATE_MAPPING_SOURCE: PROFILE
-  
+  # ARCHITECTURE_EC_CUSTOM_USER_CONFIGURATION_FOLDER: my-ec-user-config-folder
+
+# Tolerances can be defined for RBT (requirements-based tests) and B2B (back-to-back & regression tests)
+# and will automatically be applied (supported with EP 24.1 and beyond)
+# For each scope, for each DISP/OUT the signal is checked:
+# 1. Does the signal name match any of the "signal-name-based" tolerance definitions?
+#   -> first matching tolerance definition is applied (based on regex <-> signal-name)
+#   If no signal-name based tolerance was defined, default tolerances based no data type are considered:
+# 2. Does the signal use a floating point data type? [ 'double', 'single', 'float', 'float32', 'float64', 'real' ]
+#   -> apply default tolerances for floats (if defined)
+# 3. Does the signal use a fixed-point data type? (integer with LSB < 1)
+#   -> apply default tolerances for fixed-point (if defined)
+#   -> tolerance can also be defined as a multiple of the LSB (e.g. 1*LSB)
+#
+# abs: absolute tolerance - a deviation <= abs will be accepted as PASSED
+# rel: relative tolerance - accepted deviation <= (reference value * rel) will be accepted as PASSED
+#      useful for floats to compensate for low precision on high float values
+# tolerances:
+#   B2B: 
+#     # specific tolerances for matching signals
+#     signal-name-based:
+#       - regex: .*_write.*
+#         rel: 2e-1
+#       - regex: .*dsout_.*
+#         abs: 4e-6
+#         rel: 4e-4
+
+#     # default tolerances for anything else
+#     floating-point:
+#       abs: 0.001
+#       rel: 0.01
+#     fixed-point:
+#       abs: 1*LSB
+
 # Additionally, you can specify arbitrary key-value pairs to use them in your scripts
 # The goal is to separate any configuration from the code, so you can adapt your
 # configuration without changing your code.

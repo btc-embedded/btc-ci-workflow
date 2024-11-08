@@ -35,8 +35,15 @@ def run_btc_test(epp_file):
     test_results = list(response['testResults'].values())[0]
     rbt_verdict = "ERROR" if not test_results['errorneousTests'] == '0' else ("FAILED" if not test_results['failedTests'] == '0' else ("PASSED" if not test_results['passedTests'] == '0' else "N.A."))
 
-    # automatic test generation
-    ep.post('coverage-generation', message="Generating vectors")
+    # automatic test generation for MCDC with a timeout of 30 seconds
+    vector_gen_settings = {
+        'scopeUid'  : toplevel_scope_uid,
+        'pllString' : 'MCDC', 
+        'engineSettings' : {
+            'timeoutSeconds' : 30
+        }
+    }
+    ep.post('coverage-generation', vector_gen_settings, message="Generating vectors")
     b2b_coverage = ep.get(f"scopes/{toplevel_scope_uid}/coverage-results-b2b")
 
     # B2B TL MIL vs. SIL
