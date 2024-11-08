@@ -1,7 +1,7 @@
 import os
 import sys
 
-from btc_embedded import EPRestApi, get_merged_config, util
+from btc_embedded import EPRestApi, util
 
 
 def run_btc_test(epp_file):
@@ -12,7 +12,7 @@ def run_btc_test(epp_file):
 
     # Load a BTC EmbeddedPlatform profile (*.epp) and update it (incl. code generation via TL)
     ep.get(f"profiles/{epp_file}?discardCurrentProfile=true", message="Loading profile")
-    ep.put('architectures', message='Updating architecture')
+    ep.put('architectures?updateCheck=true', message='Updating architecture')
 
     # Execute requirements-based tests on MIL and SIL
     scopes = ep.get('scopes')
@@ -48,6 +48,6 @@ def run_btc_test(epp_file):
 
 
 # Allows the script to be called directly
-# (e.g., "python.exe test_workflow.py some_folder/my_project.epp")
+# (e.g., "python test_workflow.py some_folder/my_project.epp")
 if __name__ == '__main__':
     run_btc_test(sys.argv[1])
